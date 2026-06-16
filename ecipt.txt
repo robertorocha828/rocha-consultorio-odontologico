@@ -1,0 +1,5 @@
+GIT_SSH_COMMAND='ssh -i ~/.ssh/rocha_consultorio_odontologico_github_deploy' git clone git@github.com:robertorocha828/rocha-consultorio-odontologico.git /opt/rocha-consultorio-odontologico
+cd /opt/rocha_consultorio_odontologico
+
+
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIK3RWFaRMm8xVKbTY7sgYlweAPesnYol0j+kzsRjxoIn rocha-consultorio-odontologico-gh-actions-root

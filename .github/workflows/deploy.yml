@@ -1,0 +1,44 @@
+name: 🚀 Deploy NestJS Blog Backend API to VPS
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Copy project to VPS
+      uses: appleboy/scp-action@v0.1.3
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: root
+        key: ${{ secrets.VPS_KEY }}
+        source: "."
+        target: "/opt/rocha-consultorio-odontologico"
+
+    - name: Run deploy commands on VPS
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: root
+        key: ${{ secrets.VPS_KEY }}
+        script: |
+          set -e
+          cd /opt/rocha-consultorio-odontologico
+
+          sudo lsof -t -i:3000 | xargs -r sudo kill -9 || true
+
+          printf "%s" "${{ secrets.ENV_FILE }}" > .env
+
+          npm install
+          npm run build
+
+          pm2 stop ocha-consultorio-odontologico || true
+          pm2 delete ocha-consultorio-odontologico-api || true
+          pm2 start dist/main.js --name ocha-consultorio-odontologico
+          pm2 save
