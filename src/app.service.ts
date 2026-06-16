@@ -5,7 +5,7 @@ export class AppService {
   getHello(): any {
     return {
     "status" : "Online",
-    "service": "rocha api",
+    "service": "rocha-consultorio-odontologico api",
     "version" : "0.0.1",
     "date": new Date(),
     }
