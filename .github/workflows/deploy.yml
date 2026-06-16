@@ -35,7 +35,7 @@ jobs:
 
           printf "%s" "${{ secrets.ENV_FILE }}" > .env
 
-          npm install
+          npm install --legacy-peer-deps
           npm run build
 
           pm2 stop ocha-consultorio-odontologico || true
