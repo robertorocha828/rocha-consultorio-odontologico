@@ -6,6 +6,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { OdontogramaModule } from './odontograma/odontograma.module'; 
 import { PacientesModule } from './pacientes/pacientes.module';
+import { CitasModule } from './citas/citas.module';
 
 
 @Module({
@@ -25,6 +26,7 @@ import { PacientesModule } from './pacientes/pacientes.module';
     }),
     OdontogramaModule,
     PacientesModule,
+    CitasModule,
 
   ],
   controllers: [AppController],
