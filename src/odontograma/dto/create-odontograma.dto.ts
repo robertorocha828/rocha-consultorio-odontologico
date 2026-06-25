@@ -12,20 +12,20 @@ import { DienteDto } from './diente.dto';
 export class CreateOdontogramaDto {
   @IsNotEmpty()
   @IsString()
-  pacienteId: string;
+  pacienteId?: string;
 
   @IsNotEmpty()
   @IsDateString()
-  fechaEvaluacion: Date;
+  fechaEvaluacion?: Date;
 
   @IsNotEmpty()
   @IsString()
-  odontologoId: string;
+  odontologoId?: string;
 
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => DienteDto)
-  dientes: DienteDto[];
+  dientes?: DienteDto[];
 
   @IsOptional()
   @IsString()
