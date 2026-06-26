@@ -9,6 +9,12 @@ import { PacientesModule } from './pacientes/pacientes.module';
 import { EspecialidadesModule } from './especialidades/especialidades.module';
 import { OdontologosModule } from './odontologos/odontologos.module';
 import { CitasModule } from './citas/citas.module';
+import { AuthModule } from './auth/auth.module';
+import { PermisosModule } from './permisos/permisos.module';
+import { RolesModule } from './roles/roles.module';
+import { UsersModule } from './users/users.module';
+import { MailModule } from './mail/mail.module';
+
 
 
 
@@ -32,6 +38,11 @@ import { CitasModule } from './citas/citas.module';
     EspecialidadesModule,
     OdontologosModule,
     CitasModule,
+    AuthModule,
+    PermisosModule,
+    RolesModule,
+    UsersModule,
+    MailModule,
 
   ],
   controllers: [AppController],
