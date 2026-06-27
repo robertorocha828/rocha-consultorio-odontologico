@@ -9,13 +9,13 @@ import { PacientesModule } from './pacientes/pacientes.module';
 import { EspecialidadesModule } from './especialidades/especialidades.module';
 import { OdontologosModule } from './odontologos/odontologos.module';
 import { CitasModule } from './citas/citas.module';
+import { TiposTratamientoModule } from './tipos-tratamiento/tipos-tratamiento.module';
+import { TratamientosModule } from './tratamientos/tratamientos.module';
 import { AuthModule } from './auth/auth.module';
 import { PermisosModule } from './permisos/permisos.module';
 import { RolesModule } from './roles/roles.module';
 import { UsersModule } from './users/users.module';
 import { MailModule } from './mail/mail.module';
-
-
 
 
 @Module({
@@ -38,12 +38,13 @@ import { MailModule } from './mail/mail.module';
     EspecialidadesModule,
     OdontologosModule,
     CitasModule,
+    TiposTratamientoModule,
+    TratamientosModule,
     AuthModule,
     PermisosModule,
     RolesModule,
     UsersModule,
     MailModule,
-
   ],
   controllers: [AppController],
   providers: [AppService],

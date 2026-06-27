@@ -1,6 +1,6 @@
 import { IsBoolean, IsOptional, IsString, MaxLength } from 'class-validator';
 
-export class UpdateEspecialidadDto {
+export class UpdateTipoTratamientoDto {
   @IsOptional()
   @IsString()
   @MaxLength(100)

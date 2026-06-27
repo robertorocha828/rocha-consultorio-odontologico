@@ -1,6 +1,6 @@
 import { IsBoolean, IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
 
-export class CreateEspecialidadDto {
+export class CreateTipoTratamientoDto {
   @IsNotEmpty()
   @IsString()
   @MaxLength(100)
