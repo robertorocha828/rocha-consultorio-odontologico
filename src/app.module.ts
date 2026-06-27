@@ -9,6 +9,8 @@ import { PacientesModule } from './pacientes/pacientes.module';
 import { EspecialidadesModule } from './especialidades/especialidades.module';
 import { OdontologosModule } from './odontologos/odontologos.module';
 import { CitasModule } from './citas/citas.module';
+import { ConsultoriosModule } from './consultorios/consultorios.module';
+import { HorariosModule } from './horarios/horarios.module';
 
 
 
@@ -32,6 +34,8 @@ import { CitasModule } from './citas/citas.module';
     EspecialidadesModule,
     OdontologosModule,
     CitasModule,
+    ConsultoriosModule,
+    HorariosModule,
 
   ],
   controllers: [AppController],
