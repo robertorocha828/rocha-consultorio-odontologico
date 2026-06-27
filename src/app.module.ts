@@ -9,8 +9,8 @@ import { PacientesModule } from './pacientes/pacientes.module';
 import { EspecialidadesModule } from './especialidades/especialidades.module';
 import { OdontologosModule } from './odontologos/odontologos.module';
 import { CitasModule } from './citas/citas.module';
-
-
+import { TiposTratamientoModule } from './tipos-tratamiento/tipos-tratamiento.module';
+import { TratamientosModule } from './tratamientos/tratamientos.module';
 
 @Module({
   imports: [
@@ -32,6 +32,8 @@ import { CitasModule } from './citas/citas.module';
     EspecialidadesModule,
     OdontologosModule,
     CitasModule,
+    TiposTratamientoModule,
+    TratamientosModule,
 
   ],
   controllers: [AppController],
