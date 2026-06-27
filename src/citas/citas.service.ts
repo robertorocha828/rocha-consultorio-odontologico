@@ -6,29 +6,57 @@ import { Cita } from './cita.entity';
 import { CreateCitaDto } from './dto/create-cita.dto';
 import { UpdateCitaDto } from './dto/update-cita.dto';
 import { QueryDto } from 'src/common/dto/query.dto';
+import { MailService } from '../mail/mail.service';
+import { NotificacionesService } from '../notificaciones/notificaciones.service';
 
 @Injectable()
 export class CitasService {
   constructor(
     @InjectRepository(Cita)
     private readonly citaRepo: Repository<Cita>,
+    private readonly mailService: MailService,
+    private readonly notificacionesService: NotificacionesService,
   ) {}
 
   async create(dto: CreateCitaDto): Promise<Cita | null> {
     try {
       const cita = this.citaRepo.create(dto);
-      return await this.citaRepo.save(cita);
+      const saved = await this.citaRepo.save(cita);
+
+      if (dto.emailPaciente) {
+        try {
+          await this.mailService.sendMail({
+            to: dto.emailPaciente,
+            subject: 'Confirmación de Cita',
+            message: `<h2>Cita Agendada</h2>
+                      <p>Tu cita para <b>${dto.motivo}</b> fue agendada
+                      para el <b>${dto.fechaHora}</b>.</p>`,
+          });
+          await this.notificacionesService.create({
+            destinatario: dto.emailPaciente,
+            asunto: 'Confirmación de Cita',
+            mensaje: `Cita agendada para ${dto.motivo}`,
+            estado: 'enviado',
+            tipo: 'cita',
+            referenciaId: saved.id,
+          });
+        } catch (err) {
+          console.error('Error enviando email de cita:', err);
+        }
+      }
+
+      return saved;
     } catch (err) {
       console.error('Error creando cita:', err);
       return null;
     }
   }
 
+  // ── el resto de métodos queda exactamente igual ──
   async findAll(queryDto: QueryDto): Promise<Pagination<Cita> | null> {
     try {
       const { page, limit, search, searchField, sort, order } = queryDto;
       const query = this.citaRepo.createQueryBuilder('cita');
-
       if (search) {
         if (searchField) {
           switch (searchField) {
@@ -48,11 +76,9 @@ export class CitasService {
           query.where('cita.motivo ILIKE :search', { search: `%${search}%` });
         }
       }
-
       if (sort) {
         query.orderBy(`cita.${sort}`, (order ?? 'ASC') as 'ASC' | 'DESC');
       }
-
       return await paginate<Cita>(query, { page, limit });
     } catch (err) {
       console.error('Error listando citas:', err);
