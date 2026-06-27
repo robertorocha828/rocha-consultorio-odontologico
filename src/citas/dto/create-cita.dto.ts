@@ -1,5 +1,6 @@
 import {
   IsDateString,
+  IsEmail,
   IsEnum,
   IsNotEmpty,
   IsOptional,
@@ -11,6 +12,10 @@ export class CreateCitaDto {
   @IsNotEmpty()
   @IsString()
   pacienteId?: string;
+
+  @IsOptional()
+  @IsEmail()
+  emailPaciente?: string;
 
   @IsOptional()
   @IsString()
