@@ -19,6 +19,7 @@ import { RolesModule } from './roles/roles.module';
 import { UsersModule } from './users/users.module';
 import { MailModule } from './mail/mail.module';
 import { NotificacionesModule } from './notificaciones/notificaciones.module';
+import { HistorialClinicoModule } from './historial-clinico/historial-clinico.module';
 
 
 
@@ -51,7 +52,8 @@ import { NotificacionesModule } from './notificaciones/notificaciones.module';
     RolesModule,
     UsersModule,
     MailModule,
-    NotificacionesModule
+    NotificacionesModule,
+    HistorialClinicoModule
   ],
   controllers: [AppController],
   providers: [AppService],
