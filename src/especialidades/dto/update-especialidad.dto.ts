@@ -1,4 +1,12 @@
-import { PartialType } from '@nestjs/swagger';
-import { CreateEspecialidadDto } from './create-especialidad.dto';
+import { IsBoolean, IsOptional, IsString, MaxLength } from 'class-validator';
 
-export class UpdateEspecialidadDto extends PartialType(CreateEspecialidadDto) {}
+export class UpdateEspecialidadDto {
+  @IsOptional()
+  @IsString()
+  @MaxLength(100)
+  nombre?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  activo?: boolean;
+}
