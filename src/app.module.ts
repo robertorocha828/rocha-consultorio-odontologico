@@ -18,6 +18,7 @@ import { PermisosModule } from './permisos/permisos.module';
 import { RolesModule } from './roles/roles.module';
 import { UsersModule } from './users/users.module';
 import { MailModule } from './mail/mail.module';
+import { NotificacionesModule } from './notificaciones/notificaciones.module';
 
 
 
@@ -50,6 +51,7 @@ import { MailModule } from './mail/mail.module';
     RolesModule,
     UsersModule,
     MailModule,
+    NotificacionesModule
   ],
   controllers: [AppController],
   providers: [AppService],
