@@ -1,98 +1,262 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Consultorio Odontologico
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Sistema backend para la gestión de un consultorio odontológico, desarrollado con NestJS. El proyecto integra módulos clínicos, administrativos, de inventario, autenticación y documentación de API para centralizar la operación del consultorio.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Integrantes
 
-## Description
+- Christian Cañar
+- Roberto Rocha
+- Hernán Varas
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Descripción funcional
 
-## Project setup
+El sistema permite administrar información clave del consultorio odontológico, incluyendo pacientes, odontólogos, especialidades, citas, tratamientos, inventario, pagos, facturación, recetas, historiales clínicos y odontogramas.  
+Parte de la información se maneja en PostgreSQL para módulos relacionales y parte en MongoDB para colecciones documentales (odontogramas, historiales clínicos, recetas).
 
-```bash
-$ npm install
-```
+El proyecto incorpora autenticación con JWT, validación global de datos y documentación automática con Swagger para facilitar pruebas e integración entre módulos.
 
-## Compile and run the project
+## Tecnologías utilizadas
 
-```bash
-# development
-$ npm run start
+- NestJS
+- TypeORM
+- PostgreSQL
+- MongoDB
+- Mongoose
+- JWT
+- Passport
+- Swagger
+- class-validator / class-transformer
 
-# watch mode
-$ npm run start:dev
+## Estructura general
 
-# production mode
-$ npm run start:prod
-```
+El backend está organizado por módulos funcionales dentro de `src/`, incluyendo:
 
-## Run tests
+- `auth`
+- `citas`
+- `consultorios`
+- `especialidades`
+- `facturas`
+- `historial-clinico`
+- `horarios`
+- `inventario`
+- `mail`
+- `notificaciones`
+- `odontograma`
+- `odontologos`
+- `pacientes`
+- `pagos`
+- `permisos`
+- `recetas`
+- `roles`
+- `tipos-tratamiento`
+- `tratamientos`
+- `users`
 
-```bash
-# unit tests
-$ npm run test
+## Instalación
 
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
-
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+### 1. Clonar el repositorio
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+git clone https://github.com/robertorocha828/rocha-consultorio-odontologico.git
+cd rocha-consultorio-odontologico
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### 2. Instalar dependencias
 
-## Resources
+```bash
+npm install
+```
 
-Check out a few resources that may come in handy when working with NestJS:
+### 3. Configurar variables de entorno
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+Crea un archivo `.env` en la raíz del proyecto con una configuración similar:
 
-## Support
+```env
+PORT=3000
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=postgres
+DB_PASS=tu_password
+DB_NAME=consultorio_odontologico
+DB_SSL=false
 
-## Stay in touch
+MONGO_URI=mongodb://localhost:27017/consultorio_odontologico
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+JWT_SECRET=tu_clave_secreta
+JWT_EXPIRES_IN=1d
+```
 
-## License
+### 4. Ejecutar el proyecto
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+Modo desarrollo:
+
+```bash
+npm run start:dev
+```
+
+Modo producción:
+
+```bash
+npm run build
+npm run start:prod
+```
+
+## Uso
+
+### Base URL
+
+```text
+http://localhost:3000
+```
+
+### Verificar que la API está activa
+
+```http
+GET /
+```
+
+Respuesta de ejemplo:
+
+```json
+{
+  "status": "Online",
+  "service": "rocha-consultorio-odontologico api",
+  "version": "0.0.1",
+  "date": "2026-06-28T00:00:00.000Z"
+}
+```
+
+### Documentación Swagger
+
+```text
+http://localhost:3000/docs
+```
+
+---
+
+## Autenticación
+
+El proyecto implementa autenticación con JWT usando `@nestjs/jwt`, `passport-jwt` y un guard `JwtAuthGuard`.
+
+### 1. Registro de usuario
+
+```http
+POST /auth/register
+```
+
+Registra un usuario nuevo y devuelve un `access_token` JWT. Durante el registro se envía un correo de bienvenida y se crea una notificación interna (según la configuración del módulo de mail y notificaciones).
+
+**Body de ejemplo**  
+(ajusta los campos a lo que tenga realmente tu `CreateUserDto`):
+
+```json
+{
+  "username": "admin",
+  "email": "admin@consultorio.com",
+  "password": "123456"
+}
+```
+
+### 2. Inicio de sesión
+
+```http
+POST /auth/login
+```
+
+**Body de ejemplo:**
+
+```json
+{
+  "email": "admin@consultorio.com",
+  "password": "123456"
+}
+```
+
+**Respuesta de ejemplo:**
+
+```json
+{
+  "access_token": "tu_jwt_aqui"
+}
+```
+
+### 3. Consumo de endpoints protegidos
+
+Para consumir endpoints protegidos, debes enviar el token en el header:
+
+```http
+Authorization: Bearer tu_jwt_aqui
+```
+
+La estrategia JWT agrega al request un objeto `user` con `id`, `email` y `rol`.
+
+### 4. Roles
+
+Existen un decorador `@Roles(...)` y un `RolesGuard` que permiten restringir ciertas rutas a roles específicos (por ejemplo, solo administradores). Asegúrate de aplicar estos guards en los controladores que deben ser administrados por rol.
+
+---
+
+## Endpoints principales (resumen)
+
+> Ajusta la columna de autenticación según los guards que apliquen en tus controladores.
+
+| Método | Ruta                  | Descripción                          | ¿Auth?        |
+| ------ | --------------------- | ------------------------------------ | ------------- |
+| GET    | `/`                   | Health check de la API              | No            |
+| POST   | `/auth/login`        | Login, devuelve JWT                 | No            |
+| POST   | `/auth/register`     | Registro de usuario                 | No            |
+| GET    | `/docs`              | Documentación Swagger               | No            |
+| CRUD   | `/pacientes`         | Gestión de pacientes                | Sí (recomend.)|
+| CRUD   | `/odontologos`       | Gestión de odontólogos              | Sí (recomend.)|
+| CRUD   | `/especialidades`    | Gestión de especialidades           | Sí (recomend.)|
+| CRUD   | `/citas`             | Gestión de citas                    | Sí (recomend.)|
+| CRUD   | `/users`             | Gestión de usuarios                 | Sí            |
+| CRUD   | `/roles`             | Gestión de roles                    | Sí            |
+| CRUD   | `/permisos`          | Gestión de permisos                 | Sí            |
+| CRUD   | `/tratamientos`      | Gestión de tratamientos             | Sí (recomend.)|
+| CRUD   | `/tipos-tratamiento` | Catálogo de tipos de tratamiento    | Sí (recomend.)|
+| CRUD   | `/inventario`        | Gestión de inventario               | Sí (recomend.)|
+| CRUD   | `/pagos`             | Gestión de pagos                    | Sí (recomend.)|
+| CRUD   | `/facturas`          | Gestión de facturas                 | Sí (recomend.)|
+| CRUD   | `/consultorios`      | Gestión de consultorios             | Sí (recomend.)|
+| CRUD   | `/horarios`          | Gestión de horarios                 | Sí (recomend.)|
+| CRUD   | `/notificaciones`    | Gestión de notificaciones           | Sí (recomend.)|
+| CRUD   | `/odontograma`       | Gestión de odontogramas             | Sí (recomend.)|
+| CRUD   | `/historial-clinico` | Gestión de historiales clínicos     | Sí (recomend.)|
+| CRUD   | `/recetas`           | Gestión de recetas                  | Sí (recomend.)|
+
+---
+
+## Bases de datos
+
+### PostgreSQL
+
+Usado para módulos relacionales: pacientes, odontólogos, especialidades, citas, usuarios, roles, tratamientos, tipos de tratamiento, pagos, facturas, consultorios, horarios, permisos, notificaciones, inventario.
+
+### MongoDB
+
+Usado para colecciones documentales: odontogramas, historial clínico, recetas.
+
+---
+
+## Scripts útiles
+
+```bash
+npm run start
+npm run start:dev
+npm run build
+npm run start:prod
+npm run lint
+npm run test
+npm run test:cov
+```
+
+---
+
+## Recomendaciones para pruebas
+
+- Probar primero `GET /` para confirmar que la API está arriba.
+- Usar Swagger (`/docs`) para explorar endpoints.
+- Usar Postman para probar login y consumo de rutas protegidas con JWT.
+- Verificar que las variables de entorno de PostgreSQL, MongoDB y JWT estén correctas antes de levantar el servicio.
