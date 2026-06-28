@@ -18,6 +18,8 @@ import { PermisosModule } from './permisos/permisos.module';
 import { RolesModule } from './roles/roles.module';
 import { UsersModule } from './users/users.module';
 import { MailModule } from './mail/mail.module';
+import { InventarioModule } from './inventario/inventario.module';
+import { RecetasModule } from './recetas/recetas.module';
 import { NotificacionesModule } from './notificaciones/notificaciones.module';
 import { HistorialClinicoModule } from './historial-clinico/historial-clinico.module';
 import { PagosModule } from './pagos/pagos.module';
@@ -52,6 +54,8 @@ import { FacturasModule } from './facturas/facturas.module';
     RolesModule,
     UsersModule,
     MailModule,
+    InventarioModule,
+    RecetasModule,
     NotificacionesModule,
     HistorialClinicoModule,
     PagosModule,
