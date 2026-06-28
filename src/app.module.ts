@@ -18,6 +18,8 @@ import { PermisosModule } from './permisos/permisos.module';
 import { RolesModule } from './roles/roles.module';
 import { UsersModule } from './users/users.module';
 import { MailModule } from './mail/mail.module';
+import { InventarioModule } from './inventario/inventario.module';
+import { RecetasModule } from './recetas/recetas.module';
 
 
 
@@ -50,6 +52,8 @@ import { MailModule } from './mail/mail.module';
     RolesModule,
     UsersModule,
     MailModule,
+    InventarioModule,
+    RecetasModule,
   ],
   controllers: [AppController],
   providers: [AppService],
