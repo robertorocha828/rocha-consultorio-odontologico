@@ -20,8 +20,10 @@ import { UsersModule } from './users/users.module';
 import { MailModule } from './mail/mail.module';
 import { InventarioModule } from './inventario/inventario.module';
 import { RecetasModule } from './recetas/recetas.module';
-
-
+import { NotificacionesModule } from './notificaciones/notificaciones.module';
+import { HistorialClinicoModule } from './historial-clinico/historial-clinico.module';
+import { PagosModule } from './pagos/pagos.module';
+import { FacturasModule } from './facturas/facturas.module';
 
 @Module({
   imports: [
@@ -54,6 +56,10 @@ import { RecetasModule } from './recetas/recetas.module';
     MailModule,
     InventarioModule,
     RecetasModule,
+    NotificacionesModule,
+    HistorialClinicoModule,
+    PagosModule,
+    FacturasModule,
   ],
   controllers: [AppController],
   providers: [AppService],
