@@ -38,7 +38,6 @@ export class CitasService {
             mensaje: `Cita agendada para ${dto.motivo}`,
             estado: 'enviado',
             tipo: 'cita',
-            referenciaId: saved.id,
           });
         } catch (err) {
           console.error('Error enviando email de cita:', err);
