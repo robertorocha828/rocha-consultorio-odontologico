@@ -1,74 +1,71 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { paginate, Pagination } from 'nestjs-typeorm-paginate';
 import { Factura } from './factura.entity';
+import { Paciente } from '../pacientes/paciente.entity';
+import { Pago } from '../pagos/pago.entity';
 import { CreateFacturaDto } from './dto/create-factura.dto';
 import { UpdateFacturaDto } from './dto/update-factura.dto';
-import { QueryDto } from 'src/common/dto/query.dto';
 
 @Injectable()
 export class FacturasService {
   constructor(
     @InjectRepository(Factura)
-    private readonly facturaRepo: Repository<Factura>,
+    private readonly facturaRepository: Repository<Factura>,
+
+    @InjectRepository(Paciente)
+    private readonly pacienteRepository: Repository<Paciente>,
+
+    @InjectRepository(Pago)
+    private readonly pagoRepository: Repository<Pago>,
   ) {}
 
-  async create(dto: CreateFacturaDto): Promise<Factura | null> {
-    try {
-      const factura = this.facturaRepo.create(dto);
-      return await this.facturaRepo.save(factura);
-    } catch (err) {
-      console.error('Error creando factura:', err);
-      return null;
+  async create(createFacturaDto: CreateFacturaDto) {
+    const paciente = await this.pacienteRepository.findOne({ where: { id: createFacturaDto.pacienteId } });
+    if (!paciente) throw new NotFoundException('Paciente no encontrado');
+
+    let pago = undefined;
+    if (createFacturaDto.pagoId) {
+      pago = await this.pagoRepository.findOne({ where: { id: createFacturaDto.pagoId } });
+      if (!pago) throw new NotFoundException('Pago no encontrado');
     }
+
+    const factura = this.facturaRepository.create({
+      numero: createFacturaDto.numero,
+      subtotal: createFacturaDto.subtotal,
+      total: createFacturaDto.total,
+      observaciones: createFacturaDto.observaciones,
+      paciente,
+      pago,
+    });
+    return this.facturaRepository.save(factura);
   }
 
-  async findAll(queryDto: QueryDto): Promise<Pagination<Factura> | null> {
-    try {
-      const { page, limit, sort, order } = queryDto;
-      const query = this.facturaRepo.createQueryBuilder('factura');
-
-      if (sort) {
-        query.orderBy(`factura.${sort}`, (order ?? 'ASC') as 'ASC' | 'DESC');
-      }
-
-      return await paginate<Factura>(query, { page, limit });
-    } catch (err) {
-      console.error('Error listando facturas:', err);
-      return null;
-    }
+  findAll() {
+    return this.facturaRepository.find({ relations: { paciente: true, pago: true } });
   }
 
-  async findOne(id: string): Promise<Factura | null> {
-    try {
-      return await this.facturaRepo.findOne({ where: { id } });
-    } catch (err) {
-      console.error('Error buscando factura:', err);
-      return null;
-    }
+  async findOne(id: string) {
+    const factura = await this.facturaRepository.findOne({ where: { id }, relations: { paciente: true, pago: true } });
+    if (!factura) throw new NotFoundException('Factura no encontrada');
+    return factura;
   }
 
-  async update(id: string, dto: UpdateFacturaDto): Promise<Factura | null> {
-    try {
-      const factura = await this.findOne(id);
-      if (!factura) return null;
-      Object.assign(factura, dto);
-      return await this.facturaRepo.save(factura);
-    } catch (err) {
-      console.error('Error actualizando factura:', err);
-      return null;
+  async update(id: string, updateFacturaDto: UpdateFacturaDto) {
+    const factura = await this.findOne(id);
+
+    if (updateFacturaDto.pagoId) {
+      const pago = await this.pagoRepository.findOne({ where: { id: updateFacturaDto.pagoId } });
+      if (!pago) throw new NotFoundException('Pago no encontrado');
+      factura.pago = pago;
     }
+
+    Object.assign(factura, updateFacturaDto);
+    return this.facturaRepository.save(factura);
   }
 
-  async remove(id: string): Promise<Factura | null> {
-    try {
-      const factura = await this.findOne(id);
-      if (!factura) return null;
-      return await this.facturaRepo.remove(factura);
-    } catch (err) {
-      console.error('Error eliminando factura:', err);
-      return null;
-    }
+  async remove(id: string) {
+    const factura = await this.findOne(id);
+    return this.facturaRepository.remove(factura);
   }
 }

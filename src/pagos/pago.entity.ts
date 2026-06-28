@@ -4,7 +4,10 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
+import { Paciente } from '../pacientes/paciente.entity';
 
 export enum EstadoPago {
   PENDIENTE = 'pendiente',
@@ -23,8 +26,9 @@ export class Pago {
   @PrimaryGeneratedColumn('uuid')
   id?: string;
 
-  @Column()
-  pacienteId?: string;
+  @ManyToOne(() => Paciente)
+  @JoinColumn({ name: 'pacienteId' })
+  paciente?: Paciente;
 
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   monto?: number;

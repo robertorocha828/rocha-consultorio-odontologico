@@ -4,7 +4,11 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
+import { Paciente } from '../pacientes/paciente.entity';
+import { Pago } from '../pagos/pago.entity';
 
 export enum EstadoFactura {
   PENDIENTE = 'pendiente',
@@ -20,8 +24,13 @@ export class Factura {
   @Column({ unique: true })
   numero?: string;
 
-  @Column()
-  pacienteId?: string;
+  @ManyToOne(() => Paciente)
+  @JoinColumn({ name: 'pacienteId' })
+  paciente?: Paciente;
+
+  @ManyToOne(() => Pago, { nullable: true })
+  @JoinColumn({ name: 'pagoId' })
+  pago?: Pago;
 
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   subtotal?: number;

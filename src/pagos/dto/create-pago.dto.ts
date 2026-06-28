@@ -4,12 +4,12 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  IsUUID,
 } from 'class-validator';
 import { MetodoPago } from '../pago.entity';
 
 export class CreatePagoDto {
-  @IsNotEmpty()
-  @IsString()
+  @IsUUID()
   pacienteId?: string;
 
   @IsNotEmpty()
