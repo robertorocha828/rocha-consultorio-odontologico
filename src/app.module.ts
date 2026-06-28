@@ -53,7 +53,7 @@ import { FacturasModule } from './facturas/facturas.module';
     UsersModule,
     MailModule,
     NotificacionesModule,
-    HistorialClinicoModule
+    HistorialClinicoModule,
     PagosModule,
     FacturasModule,
   ],
