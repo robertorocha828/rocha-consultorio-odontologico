@@ -18,10 +18,10 @@ import { PermisosModule } from './permisos/permisos.module';
 import { RolesModule } from './roles/roles.module';
 import { UsersModule } from './users/users.module';
 import { MailModule } from './mail/mail.module';
+import { NotificacionesModule } from './notificaciones/notificaciones.module';
+import { HistorialClinicoModule } from './historial-clinico/historial-clinico.module';
 import { PagosModule } from './pagos/pagos.module';
 import { FacturasModule } from './facturas/facturas.module';
-
-
 
 @Module({
   imports: [
@@ -52,6 +52,8 @@ import { FacturasModule } from './facturas/facturas.module';
     RolesModule,
     UsersModule,
     MailModule,
+    NotificacionesModule,
+    HistorialClinicoModule
     PagosModule,
     FacturasModule,
   ],
