@@ -41,7 +41,6 @@ export class AuthService {
         mensaje: `Cuenta creada para ${user.username}`,
         estado: 'enviado',
         tipo: 'bienvenida',
-        referenciaId: user.id,
       });
     } catch (err) {
       console.error('Error enviando email:', err);

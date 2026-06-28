@@ -9,7 +9,7 @@ export class Notificacion {
   id?: string;
 
   @Column()
-  destinatario?: string;      // email al que se envió
+  destinatario?: string;      
 
   @Column()
   asunto?: string;
@@ -18,13 +18,11 @@ export class Notificacion {
   mensaje?: string;
 
   @Column({ default: 'enviado' })
-  estado?: string;            // enviado | fallido
+  estado?: string;           
 
   @Column({ nullable: true })
-  tipo?: string;              // bienvenida | cita | cancelacion | pago
+  tipo?: string;              
 
-  @Column({ nullable: true })
-  referenciaId?: string;      // id de la cita, pago, etc.
 
   @CreateDateColumn()
   creadoEn?: Date;

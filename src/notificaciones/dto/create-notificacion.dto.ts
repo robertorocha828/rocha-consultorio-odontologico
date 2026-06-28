@@ -21,7 +21,4 @@ export class CreateNotificacionDto {
   @IsString()
   tipo?: string;
 
-  @IsOptional()
-  @IsString()
-  referenciaId?: string;
 }
