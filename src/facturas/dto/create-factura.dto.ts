@@ -3,6 +3,7 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  IsUUID,
 } from 'class-validator';
 
 export class CreateFacturaDto {
@@ -10,9 +11,12 @@ export class CreateFacturaDto {
   @IsString()
   numero?: string;
 
-  @IsNotEmpty()
-  @IsString()
+  @IsUUID()
   pacienteId?: string;
+
+  @IsOptional()
+  @IsUUID()
+  pagoId?: string;
 
   @IsNotEmpty()
   @IsNumber()
