@@ -30,7 +30,6 @@ export class PacientesService {
     try {
       const { page, limit, search, searchField, sort, order } = queryDto;
       const query = this.pacienteRepo.createQueryBuilder('paciente');
-
       if (search) {
         if (searchField) {
           switch (searchField) {
@@ -56,11 +55,9 @@ export class PacientesService {
           );
         }
       }
-
       if (sort) {
         query.orderBy(`paciente.${sort}`, (order ?? 'ASC') as 'ASC' | 'DESC');
       }
-
       return await paginate<Paciente>(query, { page, limit });
     } catch (err) {
       console.error('Error listando pacientes:', err);
@@ -68,17 +65,14 @@ export class PacientesService {
     }
   }
 
-  async findOneConOdontograma(id: string): Promise<any | null> {
-  try {
-    const paciente = await this.findOne(id);
-    if (!paciente) return null;
-    const odontograma = await this.odontogramaService.findByPaciente(id, { page: 1, limit: 1 });
-    return { paciente, odontograma };
-  } catch (err) {
-    console.error('Error buscando paciente con odontograma:', err);
-    return null;
+  async findOne(id: string): Promise<Paciente | null> {
+    try {
+      return await this.pacienteRepo.findOne({ where: { id } });
+    } catch (err) {
+      console.error('Error buscando paciente:', err);
+      return null;
+    }
   }
-}
 
   async findByCedula(cedula: string): Promise<Paciente | null> {
     try {
@@ -116,7 +110,7 @@ export class PacientesService {
     try {
       const paciente = await this.findOne(id);
       if (!paciente) return null;
-
+      const odontograma = await this.odontogramaService.findByPaciente(id, { page: 1, limit: 1 });
       return { paciente, odontograma };
     } catch (err) {
       console.error('Error buscando paciente con odontograma:', err);
