@@ -15,4 +15,5 @@ describe('RecetasController', () => {
   it('should be defined', () => {
     expect(controller).toBeDefined();
   });
+  
 });
