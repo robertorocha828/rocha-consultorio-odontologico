@@ -39,13 +39,6 @@ export class OdontogramaController {
     return new SuccessResponseDto('Odontogramas del paciente obtenidos', result);
   }
 
-  @Get('paciente/:pacienteId/ultimo')
-  async findLatest(@Param('pacienteId') pacienteId: string) {
-    const result = await this.odontogramaService.findLatestByPaciente(pacienteId);
-    if (!result) throw new NotFoundException('No se encontró un odontograma para este paciente');
-    return new SuccessResponseDto('Último odontograma obtenido', result);
-  }
-
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const result = await this.odontogramaService.findOne(id);

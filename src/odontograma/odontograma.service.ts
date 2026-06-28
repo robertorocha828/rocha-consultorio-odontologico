@@ -54,17 +54,6 @@ export class OdontogramaService {
     }
   }
 
-  async findLatestByPaciente(pacienteId: string): Promise<Odontograma | null> {
-    try {
-      return await this.odontogramaModel
-        .findOne({ pacienteId })
-        .sort({ fechaEvaluacion: -1 });
-    } catch (err) {
-      console.error('Error buscando odontograma más reciente:', err);
-      return null;
-    }
-  }
-
   async findOne(id: string): Promise<Odontograma | null> {
     try {
       return await this.odontogramaModel.findById(id);

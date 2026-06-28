@@ -50,15 +50,6 @@ export class PermisosService {
     }
   }
 
-  async findByRol(rolId: string): Promise<Permiso[]> {
-    try {
-      return await this.permisoRepo.find({ where: { rolId } });
-    } catch (err) {
-      console.error('Error buscando permisos por rol:', err);
-      return [];
-    }
-  }
-
   async update(id: string, dto: UpdatePermisoDto): Promise<Permiso | null> {
     try {
       const permiso = await this.findOne(id);
