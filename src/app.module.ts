@@ -20,8 +20,8 @@ import { UsersModule } from './users/users.module';
 import { MailModule } from './mail/mail.module';
 import { NotificacionesModule } from './notificaciones/notificaciones.module';
 import { HistorialClinicoModule } from './historial-clinico/historial-clinico.module';
-
-
+import { PagosModule } from './pagos/pagos.module';
+import { FacturasModule } from './facturas/facturas.module';
 
 @Module({
   imports: [
@@ -54,6 +54,8 @@ import { HistorialClinicoModule } from './historial-clinico/historial-clinico.mo
     MailModule,
     NotificacionesModule,
     HistorialClinicoModule
+    PagosModule,
+    FacturasModule,
   ],
   controllers: [AppController],
   providers: [AppService],
