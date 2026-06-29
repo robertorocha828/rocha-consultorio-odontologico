@@ -27,12 +27,6 @@ export class PermisosController {
     return new SuccessResponseDto('Permisos obtenidos exitosamente', result);
   }
 
-  @Get('rol/:rolId')
-  async findByRol(@Param('rolId') rolId: string) {
-    const result = await this.permisosService.findByRol(rolId);
-    return new SuccessResponseDto('Permisos del rol obtenidos', result);
-  }
-
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const permiso = await this.permisosService.findOne(id);
