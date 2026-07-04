@@ -5,8 +5,8 @@ import { paginate, Pagination } from 'nestjs-typeorm-paginate';
 import { Paciente } from './paciente.entity';
 import { CreatePacienteDto } from './dto/create-paciente.dto';
 import { UpdatePacienteDto } from './dto/update-paciente.dto';
-import { QueryDto } from 'src/common/dto/query.dto';
-import { OdontogramaService } from 'src/odontograma/odontograma.service';
+import { QueryDto } from '../common/dto/query.dto';
+import { OdontogramaService } from '../odontograma/odontograma.service';
 
 @Injectable()
 export class PacientesService {

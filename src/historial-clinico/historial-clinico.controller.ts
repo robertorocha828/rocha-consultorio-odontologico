@@ -5,7 +5,7 @@ import {
 import { HistorialClinicoService } from './historial-clinico.service';
 import { CreateHistorialClinicoDto } from './dto/create-historial-clinico.dto';
 import { UpdateHistorialClinicoDto } from './dto/update-historial-clinico.dto';
-import { SuccessResponseDto } from 'src/common/dto/response.dto';
+import { SuccessResponseDto } from '../common/dto/response.dto';
 
 @Controller('historial-clinico')
 export class HistorialClinicoController {
