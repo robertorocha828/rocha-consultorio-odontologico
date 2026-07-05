@@ -5,8 +5,8 @@ import {
 import { PermisosService } from './permisos.service';
 import { CreatePermisoDto } from './dto/create-permiso.dto';
 import { UpdatePermisoDto } from './dto/update-permiso.dto';
-import { SuccessResponseDto } from 'src/common/dto/response.dto';
-import { QueryDto } from 'src/common/dto/query.dto';
+import { SuccessResponseDto } from '../common/dto/response.dto';
+import { QueryDto } from '../common/dto/query.dto';
 
 @Controller('permisos')
 export class PermisosController {
