@@ -7,8 +7,8 @@ import { CreateConsultorioDto } from './dto/create-consultorio.dto';
 import { UpdateConsultorioDto } from './dto/update-consultorio.dto';
 import { Pagination } from 'nestjs-typeorm-paginate';
 import { Consultorio } from './consultorio.entity';
-import { SuccessResponseDto } from 'src/common/dto/response.dto';
-import { QueryDto } from 'src/common/dto/query.dto';
+import { SuccessResponseDto } from '../common/dto/response.dto';
+import { QueryDto } from '../common/dto/query.dto';
 
 @Controller('consultorios')
 export class ConsultoriosController {
