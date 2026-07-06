@@ -260,3 +260,55 @@ npm run test:cov
 - Usar Swagger (`/docs`) para explorar endpoints.
 - Usar Postman para probar login y consumo de rutas protegidas con JWT.
 - Verificar que las variables de entorno de PostgreSQL, MongoDB y JWT estén correctas antes de levantar el servicio.
+
+## Pruebas y cobertura
+
+El proyecto utiliza **Jest** como framework de pruebas.
+
+### Ejecutar todas las pruebas unitarias
+
+```bash
+npm run test
+```
+
+Este comando ejecuta todas las pruebas configuradas en el proyecto.
+
+### Ejecutar pruebas en modo watch
+
+```bash
+npm run test:watch
+```
+
+Este modo es útil durante el desarrollo, ya que vuelve a correr las pruebas automáticamente cuando detecta cambios en los archivos.
+
+### Ejecutar una prueba unitaria específica por archivo
+
+Si se desea ejecutar un solo archivo de prueba, se puede usar Jest directamente indicando la ruta del archivo `.spec.ts`.
+
+Ejemplo:
+
+```bash
+npx jest src/especialidades/especialidades.service.spec.ts
+```
+
+También se puede ejecutar una prueba específica usando el script base:
+
+```bash
+npm run test -- src/especialidades/especialidades.service.spec.ts
+```
+
+### Generar reporte de cobertura
+
+```bash
+npm run test:cov
+```
+
+Este comando ejecuta las pruebas y genera un reporte de cobertura del código.
+
+El reporte se guarda en la carpeta:
+
+```text
+coverage/
+```
+
+Dentro de esa carpeta se pueden revisar los archivos generados por Jest con el detalle de cobertura de líneas, funciones, ramas e instrucciones del proyecto.
