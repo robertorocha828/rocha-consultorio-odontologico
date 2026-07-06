@@ -1,28 +1,20 @@
-import {
-  IsInt,
-  IsNotEmpty,
-  IsString,
-  Max,
-  Min,
-  ValidateNested,
-} from 'class-validator';
+import { IsInt, IsOptional, IsString, Max, Min, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
-import { SuperficiesDto } from './superficies.dto';
+import { SuperficiesDto } from './create-odontograma.dto';
 
 export class UpdateDienteDto {
-  @IsNotEmpty()
-  @IsInt()
-  @Min(11)
-  @Max(85)
-  numero?: number;
+  @IsInt() @Min(11) @Max(85) numero?: number;
 
+  @IsOptional()
   @ValidateNested()
   @Type(() => SuperficiesDto)
   superficies?: SuperficiesDto;
 
-  @IsString()
+  @IsOptional() 
+  @IsString() 
   estadoGeneral?: string;
 
-  @IsString()
+  @IsOptional() 
+  @IsString() 
   observaciones?: string;
 }
