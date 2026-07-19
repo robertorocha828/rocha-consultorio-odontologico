@@ -9,7 +9,7 @@ import {
 import { EstadoCita } from '../cita.entity';
 
 export class CreateCitaDto {
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   pacienteId?: string;
 

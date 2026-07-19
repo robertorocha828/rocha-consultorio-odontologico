@@ -7,12 +7,13 @@ import { NestExpressApplication } from '@nestjs/platform-express'; // 👈 Impor
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 
+
 async function bootstrap() {
  const app = await NestFactory.create<NestExpressApplication>(AppModule); // 👈 Tipo específico
  app.useGlobalPipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }));
  app.useGlobalFilters(new GlobalHttpExceptionFilter());
  app.useStaticAssets(join(__dirname, '..', 'public')); // 👈 Habilita acceso público a /public
-
+ app.enableCors();
 
  const config = new DocumentBuilder()
    .setTitle('Mi API')
@@ -23,5 +24,6 @@ async function bootstrap() {
  const document = SwaggerModule.createDocument(app, config);
  SwaggerModule.setup('docs', app, document);
   await app.listen(3000);
+
 }
 bootstrap();
