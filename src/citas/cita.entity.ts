@@ -17,10 +17,10 @@ export class Cita {
   @PrimaryGeneratedColumn('uuid')
   id?: string;
 
-  @Column()
+  @Column({ nullable: true })
   pacienteId?: string;
 
-  @Column()
+  @Column({ nullable: true })
   odontologoId?: string;
 
   @Column({ type: 'timestamp' })
