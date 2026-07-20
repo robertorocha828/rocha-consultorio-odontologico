@@ -14,7 +14,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly mailService: MailService,
     private readonly notificacionesService: NotificacionesService,
-  ) {}
+  ) { }
 
   async login(loginDto: LoginDto) {
     const user = await this.usersService.findByEmail(loginDto.email);
@@ -33,8 +33,17 @@ export class AuthService {
       await this.mailService.sendMail({
         to: user.email,
         subject: 'Bienvenido al Consultorio Odontológico',
-        message: `<h2>Hola ${user.username}</h2><p>Tu cuenta fue creada exitosamente.</p>`,
-      });
+        message: `
+          <h2>Hola ${user.username}</h2>
+          <p>Tu cuenta fue creada exitosamente.</p>
+          <p>Tus credenciales de acceso son:</p>
+          <ul>
+            <li><b>Email:</b> ${user.email}</li>
+            <li><b>Contraseña:</b> ${user['plainPassword']}</li>
+          </ul>
+          <p>Por seguridad te recomendamos cambiar tu contraseña después de ingresar.</p>
+        `,
+            })
       await this.notificacionesService.create({
         destinatario: user.email,
         asunto: 'Bienvenido al Consultorio Odontológico',
@@ -49,4 +58,40 @@ export class AuthService {
     const payload = { id: user.id, email: user.email, rol: user.rol };
     return { access_token: this.jwtService.sign(payload) };
   }
+
+  async registerPaciente(createUserDto: CreateUserDto) {
+  const user = await this.usersService.create({
+    ...createUserDto,
+    rol: 'paciente',  // ← forzado, no importa lo que venga en el body
+  })
+  if (!user) throw new UnauthorizedException('Error al registrar paciente')
+
+  try {
+    await this.mailService.sendMail({
+      to: user.email,
+      subject: 'Bienvenido al Consultorio Odontológico',
+      message: `
+        <h2>Hola ${user.username}</h2>
+        <p>Tu cuenta de paciente fue creada exitosamente.</p>
+        <p>Tus credenciales de acceso son:</p>
+        <ul>
+          <li><b>Email:</b> ${user.email}</li>
+          <li><b>Contraseña:</b> ${user['plainPassword']}</li>
+        </ul>
+      `,
+    })
+    await this.notificacionesService.create({
+      destinatario: user.email,
+      asunto: 'Bienvenido al Consultorio Odontológico',
+      mensaje: `Cuenta de paciente creada para ${user.username}`,
+      estado: 'enviado',
+      tipo: 'bienvenida',
+    })
+  } catch (err) {
+    console.error('Error enviando email:', err)
+  }
+
+  const payload = { id: user.id, email: user.email, rol: user.rol }
+  return { access_token: this.jwtService.sign(payload) }
+}
 }
