@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { paginate, Pagination } from 'nestjs-typeorm-paginate';
-import { Cita } from './cita.entity';
+import { Cita, EstadoCita } from './cita.entity';
 import { CreateCitaDto } from './dto/create-cita.dto';
 import { UpdateCitaDto } from './dto/update-cita.dto';
 import { QueryDto } from 'src/common/dto/query.dto';
@@ -19,6 +19,19 @@ export class CitasService {
   ) {}
 
   async create(dto: CreateCitaDto): Promise<Cita | null> {
+    if (dto.odontologoId && dto.fechaHora) {
+      const conflicto = await this.citaRepo.findOne({
+        where: {
+          odontologoId: dto.odontologoId,
+          fechaHora: dto.fechaHora,
+          estado: EstadoCita.AGENDADA,
+        },
+      });
+      if (conflicto) {
+        throw new ConflictException('Ese odontólogo ya tiene una cita agendada en ese horario');
+      }
+    }
+
     try {
       const cita = this.citaRepo.create(dto);
       const saved = await this.citaRepo.save(cita);

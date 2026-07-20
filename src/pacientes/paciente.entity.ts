@@ -43,6 +43,9 @@ export class Paciente {
   @Column({ unique: true, nullable: true })
   email?: string;
 
+  @Column({ nullable: true })
+  userId?: string;
+
   @Column({ type: 'simple-array', nullable: true })
   alergias?: string[];
 

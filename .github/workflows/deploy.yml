@@ -38,7 +38,7 @@ jobs:
           npm install --legacy-peer-deps
           npm run build
 
-          pm2 stop ocha-consultorio-odontologico || true
-          pm2 delete ocha-consultorio-odontologico-api || true
-          pm2 start dist/main.js --name ocha-consultorio-odontologico
+          pm2 stop rocha-consultorio-odontologico || true
+          pm2 delete rocha-consultorio-odontologico-api || true
+          pm2 start dist/main.js --name rocha-consultorio-odontologico
           pm2 save
