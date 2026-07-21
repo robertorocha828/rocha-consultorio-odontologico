@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
@@ -24,6 +25,8 @@ import { NotificacionesModule } from './notificaciones/notificaciones.module';
 import { HistorialClinicoModule } from './historial-clinico/historial-clinico.module';
 import { PagosModule } from './pagos/pagos.module';
 import { FacturasModule } from './facturas/facturas.module';
+import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
+import { RolesGuard } from './auth/guards/roles.guard';
 
 @Module({
   imports: [
@@ -62,6 +65,12 @@ import { FacturasModule } from './facturas/facturas.module';
     FacturasModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    // Guards globales: por defecto TODA la API exige JWT válido.
+    // Las rutas públicas se marcan explícitamente con @Public().
+    { provide: APP_GUARD, useClass: JwtAuthGuard },
+    { provide: APP_GUARD, useClass: RolesGuard },
+  ],
 })
 export class AppModule {}
