@@ -14,8 +14,14 @@ export class User {
   @Column({ unique: true })
   email?: string;
 
-  @Column()
+  @Column({ nullable: true })
   password?: string;
+
+  @Column({ unique: true, nullable: true })
+  googleId?: string;
+
+  @Column({ nullable: true })
+  avatarUrl?: string;
 
   @Column({ default: 'usuario' })
   rol?: string;             // 'admin' | 'usuario'

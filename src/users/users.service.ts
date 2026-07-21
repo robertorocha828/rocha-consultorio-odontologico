@@ -100,6 +100,61 @@ export class UsersService {
     }
   }
 
+  async findByGoogleId(googleId: string): Promise<User | null> {
+    try {
+      return await this.userRepository.findOne({ where: { googleId } });
+    } catch (err) {
+      return null;
+    }
+  }
+
+  // Cuentas creadas vía Google: sin contraseña, siempre rol "paciente".
+  async createFromGoogle(data: {
+    username: string;
+    email: string;
+    googleId: string;
+    avatarUrl?: string;
+  }): Promise<User | null> {
+    try {
+      const user = this.userRepository.create({
+        username: data.username,
+        email: data.email,
+        googleId: data.googleId,
+        avatarUrl: data.avatarUrl,
+        rol: 'paciente',
+      });
+      return await this.userRepository.save(user);
+    } catch (err) {
+      console.error('Error creando usuario desde Google:', err);
+      return null;
+    }
+  }
+
+  async linkGoogleAccount(userId: string, googleId: string, avatarUrl?: string): Promise<User | null> {
+    try {
+      const user = await this.findOne(userId);
+      if (!user) return null;
+      user.googleId = googleId;
+      if (avatarUrl) user.avatarUrl = avatarUrl;
+      return await this.userRepository.save(user);
+    } catch (err) {
+      console.error('Error vinculando cuenta de Google:', err);
+      return null;
+    }
+  }
+
+  async unlinkGoogleAccount(userId: string): Promise<User | null> {
+    try {
+      const user = await this.findOne(userId);
+      if (!user) return null;
+      user.googleId = null as unknown as string;
+      return await this.userRepository.save(user);
+    } catch (err) {
+      console.error('Error desvinculando cuenta de Google:', err);
+      return null;
+    }
+  }
+
   async update(id: string, updateUserDto: UpdateUserDto): Promise<User | null> {
     try {
       const user = await this.findOne(id);
