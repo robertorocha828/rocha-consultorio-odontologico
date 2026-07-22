@@ -5,7 +5,7 @@ import { CreateUserDto } from '../users/dto/create-user.dto';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) { }
 
   @Post('login')
   login(@Body() loginDto: LoginDto) {
@@ -15,5 +15,10 @@ export class AuthController {
   @Post('register')
   register(@Body() createUserDto: CreateUserDto) {
     return this.authService.register(createUserDto);
+  }
+
+  @Post('register/paciente')
+  registerPaciente(@Body() createUserDto: CreateUserDto) {
+    return this.authService.registerPaciente(createUserDto)
   }
 }
