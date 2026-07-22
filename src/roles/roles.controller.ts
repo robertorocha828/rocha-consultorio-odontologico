@@ -7,8 +7,10 @@ import { CreateRolDto } from './dto/create-rol.dto';
 import { UpdateRolDto } from './dto/update-rol.dto';
 import { SuccessResponseDto } from '../common/dto/response.dto';
 import { QueryDto } from '../common/dto/query.dto';
+import { Roles } from '../auth/decorators/roles.decorator';
 
 @Controller('roles')
+@Roles('admin')
 export class RolesController {
   constructor(private readonly rolesService: RolesService) {}
 

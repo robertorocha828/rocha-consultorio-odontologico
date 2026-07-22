@@ -31,6 +31,9 @@ export class Odontologo {
   @Column({ unique: true, nullable: true })
   email?: string;
 
+  @Column({ nullable: true })
+  userId?: string;
+
   @Column()
   especialidad?: string;
 

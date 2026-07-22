@@ -26,6 +26,10 @@ export class CreateOdontologoDto {
   @IsEmail()
   email?: string;
 
+  @IsOptional()
+  @IsString()
+  userId?: string;
+
   @IsNotEmpty()
   @IsString()
   especialidad?: string;
