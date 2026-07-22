@@ -7,8 +7,10 @@ import { CreatePermisoDto } from './dto/create-permiso.dto';
 import { UpdatePermisoDto } from './dto/update-permiso.dto';
 import { SuccessResponseDto } from '../common/dto/response.dto';
 import { QueryDto } from '../common/dto/query.dto';
+import { Roles } from '../auth/decorators/roles.decorator';
 
 @Controller('permisos')
+@Roles('admin')
 export class PermisosController {
   constructor(private readonly permisosService: PermisosService) {}
 

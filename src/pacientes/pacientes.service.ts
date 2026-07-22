@@ -83,6 +83,15 @@ export class PacientesService {
     }
   }
 
+  async findByUsuario(userId: string): Promise<Paciente | null> {
+    try {
+      return await this.pacienteRepo.findOne({ where: { userId } });
+    } catch (err) {
+      console.error('Error buscando paciente por usuario:', err);
+      return null;
+    }
+  }
+
   async update(id: string, dto: UpdatePacienteDto): Promise<Paciente | null> {
     try {
       const paciente = await this.findOne(id);

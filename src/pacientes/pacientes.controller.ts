@@ -9,11 +9,14 @@ import { Pagination } from 'nestjs-typeorm-paginate';
 import { Paciente } from './paciente.entity';
 import { SuccessResponseDto } from '../common/dto/response.dto';
 import { QueryDto } from '../common/dto/query.dto';
+import { Roles } from '../auth/decorators/roles.decorator';
 
 @Controller('pacientes')
 export class PacientesController {
   constructor(private readonly pacientesService: PacientesService) {}
 
+  // Sin @Roles(): un paciente recién registrado crea su propia ficha
+  // (tanto en el registro manual como al completar perfil tras Google).
   @Post()
   async create(@Body() dto: CreatePacienteDto) {
     const paciente = await this.pacientesService.create(dto);
@@ -21,6 +24,7 @@ export class PacientesController {
     return new SuccessResponseDto('Paciente creado exitosamente', paciente);
   }
 
+  @Roles('admin', 'doctor')
   @Get()
   async findAll(@Query() query: QueryDto): Promise<SuccessResponseDto<Pagination<Paciente>>> {
     if (query.limit && query.limit > 100) query.limit = 100;
@@ -32,6 +36,14 @@ export class PacientesController {
   @Get('cedula/:cedula')
   async findByCedula(@Param('cedula') cedula: string) {
     const paciente = await this.pacientesService.findByCedula(cedula);
+    if (!paciente) throw new NotFoundException('Paciente no encontrado');
+    return new SuccessResponseDto('Paciente obtenido exitosamente', paciente);
+  }
+
+  // Sin @Roles(): el propio paciente la usa para encontrar su ficha.
+  @Get('usuario/:userId')
+  async findByUsuario(@Param('userId') userId: string) {
+    const paciente = await this.pacientesService.findByUsuario(userId);
     if (!paciente) throw new NotFoundException('Paciente no encontrado');
     return new SuccessResponseDto('Paciente obtenido exitosamente', paciente);
   }
@@ -51,6 +63,7 @@ export class PacientesController {
     return new SuccessResponseDto('Paciente obtenido exitosamente', paciente);
   }
 
+  @Roles('admin')
   @Put(':id')
   async update(@Param('id') id: string, @Body() dto: UpdatePacienteDto) {
     const paciente = await this.pacientesService.update(id, dto);
@@ -58,6 +71,7 @@ export class PacientesController {
     return new SuccessResponseDto('Paciente actualizado exitosamente', paciente);
   }
 
+  @Roles('admin')
   @Delete(':id')
   async remove(@Param('id') id: string) {
     const paciente = await this.pacientesService.remove(id);

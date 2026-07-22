@@ -84,6 +84,15 @@ export class OdontologosService {
     }
   }
 
+  async findByUsuario(userId: string): Promise<Odontologo | null> {
+    try {
+      return await this.odontologoRepo.findOne({ where: { userId } });
+    } catch (err) {
+      console.error('Error buscando odontólogo por usuario:', err);
+      return null;
+    }
+  }
+
   async update(id: string, dto: UpdateOdontologoDto): Promise<Odontologo | null> {
     try {
       const odontologo = await this.findOne(id);
