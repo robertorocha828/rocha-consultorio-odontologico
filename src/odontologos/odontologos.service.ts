@@ -59,6 +59,8 @@ export class OdontologosService {
         query.orderBy(`odontologo.${sort}`, (order ?? 'ASC') as 'ASC' | 'DESC');
       }
 
+      query.leftJoinAndSelect('odontologo.especialidadRel', 'especialidadRel');
+
       return await paginate<Odontologo>(query, { page, limit });
     } catch (err) {
       console.error('Error listando odontólogos:', err);
@@ -68,7 +70,7 @@ export class OdontologosService {
 
   async findOne(id: string): Promise<Odontologo | null> {
     try {
-      return await this.odontologoRepo.findOne({ where: { id } });
+      return await this.odontologoRepo.findOne({ where: { id }, relations: ['especialidadRel'] });
     } catch (err) {
       console.error('Error buscando odontólogo:', err);
       return null;
@@ -77,7 +79,7 @@ export class OdontologosService {
 
   async findByCedula(cedula: string): Promise<Odontologo | null> {
     try {
-      return await this.odontologoRepo.findOne({ where: { cedula } });
+      return await this.odontologoRepo.findOne({ where: { cedula }, relations: ['especialidadRel'] });
     } catch (err) {
       console.error('Error buscando odontólogo por cédula:', err);
       return null;
@@ -86,7 +88,7 @@ export class OdontologosService {
 
   async findByUsuario(userId: string): Promise<Odontologo | null> {
     try {
-      return await this.odontologoRepo.findOne({ where: { userId } });
+      return await this.odontologoRepo.findOne({ where: { userId }, relations: ['especialidadRel'] });
     } catch (err) {
       console.error('Error buscando odontólogo por usuario:', err);
       return null;

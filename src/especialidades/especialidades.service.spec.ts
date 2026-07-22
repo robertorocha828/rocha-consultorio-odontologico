@@ -7,16 +7,25 @@ import { Especialidad } from './especialidad.entity';
 describe('EspecialidadesService', () => {
   let service: EspecialidadesService;
 
+  const mockQueryBuilder = {
+    leftJoin:  jest.fn().mockReturnThis(),
+    addSelect: jest.fn().mockReturnThis(),
+    where:     jest.fn().mockReturnThis(),
+    getOne:    jest.fn(),
+  };
+
   const mockEspecialidadRepository = {
-    create:      jest.fn(),
-    save:        jest.fn(),
-    findOneBy:   jest.fn(),
-    find:        jest.fn(),
-    remove:      jest.fn(),
+    create:             jest.fn(),
+    save:               jest.fn(),
+    findOneBy:          jest.fn(),
+    find:               jest.fn(),
+    remove:             jest.fn(),
+    createQueryBuilder: jest.fn().mockReturnValue(mockQueryBuilder),
   };
 
   beforeEach(async () => {
     jest.clearAllMocks();
+    mockEspecialidadRepository.createQueryBuilder.mockReturnValue(mockQueryBuilder);
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -82,12 +91,12 @@ describe('EspecialidadesService', () => {
 
     it('should return an especialidad when it exists', async () => {
       const mockEspecialidad = { id: 1, nombre: 'Ortodoncia' };
-      mockEspecialidadRepository.findOneBy.mockResolvedValue(mockEspecialidad);
+      mockQueryBuilder.getOne.mockResolvedValue(mockEspecialidad);
       expect(await service.findOne(1)).toEqual(mockEspecialidad);
     });
 
     it('should throw NotFoundException when especialidad does not exist', async () => {
-      mockEspecialidadRepository.findOneBy.mockResolvedValue(null);
+      mockQueryBuilder.getOne.mockResolvedValue(null);
       await expect(service.findOne(99)).rejects.toThrow(NotFoundException);
     });
 
@@ -98,26 +107,25 @@ describe('EspecialidadesService', () => {
     it('should update and return the especialidad', async () => {
       const mockEspecialidad = { id: 1, nombre: 'Ortodoncia', activo: true };
       const mockUpdated = { id: 1, nombre: 'Ortodoncia Avanzada', activo: true };
-      mockEspecialidadRepository.findOneBy
+      mockQueryBuilder.getOne
         .mockResolvedValueOnce(mockEspecialidad)
-        .mockResolvedValueOnce(null)
         .mockResolvedValueOnce(mockUpdated);
+      mockEspecialidadRepository.findOneBy.mockResolvedValueOnce(null);
       mockEspecialidadRepository.save.mockResolvedValue(mockUpdated);
       const result = await service.update(1, { nombre: 'Ortodoncia Avanzada' });
       expect(result).toEqual(mockUpdated);
     });
 
     it('should throw NotFoundException when especialidad does not exist', async () => {
-      mockEspecialidadRepository.findOneBy.mockResolvedValue(null);
+      mockQueryBuilder.getOne.mockResolvedValue(null);
       await expect(service.update(99, { nombre: 'x' })).rejects.toThrow(NotFoundException);
     });
 
     it('should throw ConflictException when new nombre already exists', async () => {
       const mockEspecialidad = { id: 1, nombre: 'Ortodoncia' };
       const mockExisting = { id: 2, nombre: 'Endodoncia' };
-      mockEspecialidadRepository.findOneBy
-        .mockResolvedValueOnce(mockEspecialidad)
-        .mockResolvedValueOnce(mockExisting);
+      mockQueryBuilder.getOne.mockResolvedValueOnce(mockEspecialidad);
+      mockEspecialidadRepository.findOneBy.mockResolvedValueOnce(mockExisting);
       await expect(service.update(1, { nombre: 'Endodoncia' })).rejects.toThrow(ConflictException);
     });
 
@@ -127,20 +135,20 @@ describe('EspecialidadesService', () => {
 
     it('should remove and return a success message', async () => {
       const mockEspecialidad = { id: 1, nombre: 'Ortodoncia' };
-      mockEspecialidadRepository.findOneBy.mockResolvedValue(mockEspecialidad);
+      mockQueryBuilder.getOne.mockResolvedValue(mockEspecialidad);
       mockEspecialidadRepository.remove.mockResolvedValue(mockEspecialidad);
       const result = await service.remove(1);
       expect(result).toEqual({ message: 'Especialidad eliminada correctamente' });
     });
 
     it('should throw NotFoundException when especialidad does not exist', async () => {
-      mockEspecialidadRepository.findOneBy.mockResolvedValue(null);
+      mockQueryBuilder.getOne.mockResolvedValue(null);
       await expect(service.remove(99)).rejects.toThrow(NotFoundException);
     });
 
     it('should call repository.remove with the found especialidad', async () => {
       const mockEspecialidad = { id: 1, nombre: 'Ortodoncia' };
-      mockEspecialidadRepository.findOneBy.mockResolvedValue(mockEspecialidad);
+      mockQueryBuilder.getOne.mockResolvedValue(mockEspecialidad);
       mockEspecialidadRepository.remove.mockResolvedValue(mockEspecialidad);
       await service.remove(1);
       expect(mockEspecialidadRepository.remove).toHaveBeenCalledWith(mockEspecialidad);

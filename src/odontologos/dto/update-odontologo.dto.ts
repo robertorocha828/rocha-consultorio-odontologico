@@ -1,6 +1,7 @@
 import {
   IsEmail,
   IsEnum,
+  IsInt,
   IsOptional,
   IsString,
 } from 'class-validator';
@@ -25,7 +26,11 @@ export class UpdateOdontologoDto {
 
   @IsOptional()
   @IsString()
-  especialidad?: string;
+  userId?: string;
+
+  @IsOptional()
+  @IsInt()
+  especialidadId?: number;
 
   @IsOptional()
   @IsString()

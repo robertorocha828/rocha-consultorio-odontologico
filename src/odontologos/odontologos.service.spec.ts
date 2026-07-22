@@ -16,8 +16,9 @@ describe('OdontologosService', () => {
   let service: OdontologosService;
 
   const mockQueryBuilder = {
-    where:   jest.fn().mockReturnThis(),
-    orderBy: jest.fn().mockReturnThis(),
+    where:              jest.fn().mockReturnThis(),
+    orderBy:            jest.fn().mockReturnThis(),
+    leftJoinAndSelect:  jest.fn().mockReturnThis(),
   };
 
   const mockRepo = {
