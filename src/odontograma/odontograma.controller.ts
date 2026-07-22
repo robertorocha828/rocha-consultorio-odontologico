@@ -6,8 +6,10 @@ import { OdontogramaService } from './odontograma.service';
 import { CreateOdontogramaDto } from './dto/create-odontograma.dto';
 import { UpdateDienteDto } from './dto/update-diente.dto';
 import { SuccessResponseDto } from '../common/dto/response.dto';
+import { Roles } from '../auth/decorators/roles.decorator';
 
 @Controller('odontograma')
+@Roles('admin', 'doctor')
 export class OdontogramaController {
   constructor(private readonly odontogramaService: OdontogramaService) {}
 

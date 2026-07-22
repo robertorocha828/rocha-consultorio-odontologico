@@ -6,8 +6,10 @@ import { HistorialClinicoService } from './historial-clinico.service';
 import { CreateHistorialClinicoDto } from './dto/create-historial-clinico.dto';
 import { UpdateHistorialClinicoDto } from './dto/update-historial-clinico.dto';
 import { SuccessResponseDto } from '../common/dto/response.dto';
+import { Roles } from '../auth/decorators/roles.decorator';
 
 @Controller('historial-clinico')
+@Roles('admin', 'doctor')
 export class HistorialClinicoController {
   constructor(private readonly historialService: HistorialClinicoService) {}
 
