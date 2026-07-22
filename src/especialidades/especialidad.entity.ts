@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Odontologo } from '../odontologos/odontologo.entity';
 
 @Entity('especialidades')
 export class Especialidad {
@@ -10,4 +11,7 @@ export class Especialidad {
 
   @Column({ default: true })
   activo: boolean;
+
+  @OneToMany(() => Odontologo, (odontologo) => odontologo.especialidadRel)
+  odontologos?: Odontologo[];
 }

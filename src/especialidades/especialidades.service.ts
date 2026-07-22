@@ -44,7 +44,12 @@ export class EspecialidadesService {
   }
 
   async findOne(id: number): Promise<Especialidad> {
-    const especialidad = await this.especialidadRepository.findOneBy({ id });
+    const especialidad = await this.especialidadRepository
+      .createQueryBuilder('especialidad')
+      .leftJoin('especialidad.odontologos', 'odontologo')
+      .addSelect(['odontologo.id', 'odontologo.nombre', 'odontologo.apellido'])
+      .where('especialidad.id = :id', { id })
+      .getOne();
 
     if (!especialidad) {
       throw new NotFoundException('Especialidad no encontrada');

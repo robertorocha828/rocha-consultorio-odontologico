@@ -1,5 +1,6 @@
 import {
   IsEmail,
+  IsInt,
   IsNotEmpty,
   IsOptional,
   IsString,
@@ -30,9 +31,9 @@ export class CreateOdontologoDto {
   @IsString()
   userId?: string;
 
-  @IsNotEmpty()
-  @IsString()
-  especialidad?: string;
+  @IsOptional()
+  @IsInt()
+  especialidadId?: number;
 
   @IsNotEmpty()
   @IsString()

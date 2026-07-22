@@ -4,7 +4,10 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
+import { Especialidad } from '../especialidades/especialidad.entity';
 
 export enum EstadoOdontologo {
   ACTIVO = 'activo',
@@ -34,8 +37,12 @@ export class Odontologo {
   @Column({ nullable: true })
   userId?: string;
 
-  @Column()
-  especialidad?: string;
+  @Column({ nullable: true })
+  especialidadId?: number;
+
+  @ManyToOne(() => Especialidad, (especialidad) => especialidad.odontologos, { nullable: true })
+  @JoinColumn({ name: 'especialidadId' })
+  especialidadRel?: Especialidad;
 
   @Column({ unique: true })
   numeroRegistro?: string;
