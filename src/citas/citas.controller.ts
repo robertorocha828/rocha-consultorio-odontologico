@@ -9,11 +9,13 @@ import { Pagination } from 'nestjs-typeorm-paginate';
 import { Cita } from './cita.entity';
 import { SuccessResponseDto } from '../common/dto/response.dto';
 import { QueryDto } from '../common/dto/query.dto';
+import { Roles } from '../auth/decorators/roles.decorator';
 
 @Controller('citas')
 export class CitasController {
   constructor(private readonly citasService: CitasService) {}
 
+  // Sin @Roles(): el paciente autenticado agenda su propia cita.
   @Post()
   async create(@Body() dto: CreateCitaDto) {
     const cita = await this.citasService.create(dto);
@@ -21,6 +23,7 @@ export class CitasController {
     return new SuccessResponseDto('Cita creada exitosamente', cita);
   }
 
+  @Roles('admin')
   @Get()
   async findAll(
     @Query() query: QueryDto,
@@ -31,6 +34,7 @@ export class CitasController {
     return new SuccessResponseDto('Citas obtenidas exitosamente', result);
   }
 
+  // Sin @Roles(): el propio paciente consulta sus citas.
   @Get('paciente/:pacienteId')
   async findByPaciente(
     @Param('pacienteId') pacienteId: string,
@@ -41,6 +45,7 @@ export class CitasController {
     return new SuccessResponseDto('Citas del paciente obtenidas', result);
   }
 
+  // Sin @Roles(): el propio doctor consulta su agenda.
   @Get('odontologo/:odontologoId')
   async findByOdontologo(
     @Param('odontologoId') odontologoId: string,
@@ -58,6 +63,7 @@ export class CitasController {
     return new SuccessResponseDto('Cita obtenida exitosamente', cita);
   }
 
+  @Roles('admin', 'doctor')
   @Put(':id')
   async update(@Param('id') id: string, @Body() dto: UpdateCitaDto) {
     const cita = await this.citasService.update(id, dto);
@@ -65,6 +71,7 @@ export class CitasController {
     return new SuccessResponseDto('Cita actualizada exitosamente', cita);
   }
 
+  @Roles('admin')
   @Delete(':id')
   async remove(@Param('id') id: string) {
     const cita = await this.citasService.remove(id);
