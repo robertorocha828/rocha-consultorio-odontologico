@@ -39,6 +39,10 @@ export class CreatePacienteDto {
   email?: string;
 
   @IsOptional()
+  @IsString()
+  userId?: string;
+
+  @IsOptional()
   @IsArray()
   @IsString({ each: true })
   alergias?: string[];
