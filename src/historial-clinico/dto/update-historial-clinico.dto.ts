@@ -1,4 +1,4 @@
-import { IsOptional, IsString } from 'class-validator';
+import { IsArray, IsOptional, IsString } from 'class-validator';
 
 export class UpdateHistorialClinicoDto {
   @IsOptional()
@@ -8,6 +8,11 @@ export class UpdateHistorialClinicoDto {
   @IsOptional()
   @IsString()
   procedimientosRealizados?: string;
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  tratamientosIds?: string[];
 
   @IsOptional()
   @IsString()
