@@ -35,6 +35,15 @@ export class OdontologosController {
     return new SuccessResponseDto('Odontólogos obtenidos exitosamente', result);
   }
 
+  // Usuarios con rol "doctor" que todavía no tienen una ficha de odontólogo
+  // vinculada. Debe ir antes de ':id' para que no lo intente matchear como id.
+  @Roles('admin')
+  @Get('usuarios-disponibles')
+  async findUsuariosDisponibles() {
+    const usuarios = await this.odontologosService.findUsuariosDisponibles();
+    return new SuccessResponseDto('Usuarios disponibles obtenidos exitosamente', usuarios);
+  }
+
   @Get('cedula/:cedula')
   async findByCedula(@Param('cedula') cedula: string) {
     const odontologo = await this.odontologosService.findByCedula(cedula);

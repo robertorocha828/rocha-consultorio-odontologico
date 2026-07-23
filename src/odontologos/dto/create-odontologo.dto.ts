@@ -35,7 +35,8 @@ export class CreateOdontologoDto {
   @IsInt()
   especialidadId?: number;
 
-  @IsNotEmpty()
+  // Se genera automáticamente en el backend si no se envía.
+  @IsOptional()
   @IsString()
   numeroRegistro?: string;
 }
