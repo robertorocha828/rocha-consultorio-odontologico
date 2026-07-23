@@ -1,5 +1,5 @@
 import {
-  IsDateString, IsNotEmpty, IsOptional, IsString,
+  IsArray, IsDateString, IsNotEmpty, IsOptional, IsString,
 } from 'class-validator';
 
 export class CreateHistorialClinicoDto {
@@ -30,6 +30,11 @@ export class CreateHistorialClinicoDto {
   @IsOptional()
   @IsString()
   procedimientosRealizados?: string;
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  tratamientosIds?: string[];
 
   @IsOptional()
   @IsString()
