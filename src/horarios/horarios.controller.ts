@@ -9,11 +9,13 @@ import { Pagination } from 'nestjs-typeorm-paginate';
 import { Horario } from './horario.entity';
 import { SuccessResponseDto } from '../common/dto/response.dto';
 import { QueryDto } from '../common/dto/query.dto';
+import { Roles } from '../auth/decorators/roles.decorator';
 
 @Controller('horarios')
 export class HorariosController {
   constructor(private readonly horariosService: HorariosService) {}
 
+  @Roles('admin')
   @Post()
   async create(@Body() dto: CreateHorarioDto) {
     const horario = await this.horariosService.create(dto);
@@ -21,6 +23,7 @@ export class HorariosController {
     return new SuccessResponseDto('Horario creado exitosamente', horario);
   }
 
+  @Roles('admin')
   @Get()
   async findAll(
     @Query() query: QueryDto,
@@ -31,6 +34,7 @@ export class HorariosController {
     return new SuccessResponseDto('Horarios obtenidos exitosamente', result);
   }
 
+  @Roles('admin')
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const horario = await this.horariosService.findOne(id);
@@ -38,6 +42,7 @@ export class HorariosController {
     return new SuccessResponseDto('Horario obtenido exitosamente', horario);
   }
 
+  @Roles('admin')
   @Put(':id')
   async update(@Param('id') id: string, @Body() dto: UpdateHorarioDto) {
     const horario = await this.horariosService.update(id, dto);
@@ -45,6 +50,7 @@ export class HorariosController {
     return new SuccessResponseDto('Horario actualizado exitosamente', horario);
   }
 
+  @Roles('admin')
   @Delete(':id')
   async remove(@Param('id') id: string) {
     const horario = await this.horariosService.remove(id);
