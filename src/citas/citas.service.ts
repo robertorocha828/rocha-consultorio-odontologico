@@ -1,4 +1,4 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { paginate, Pagination } from 'nestjs-typeorm-paginate';
@@ -8,6 +8,13 @@ import { UpdateCitaDto } from './dto/update-cita.dto';
 import { QueryDto } from 'src/common/dto/query.dto';
 import { MailService } from '../mail/mail.service';
 import { NotificacionesService } from '../notificaciones/notificaciones.service';
+import { HorariosService } from '../horarios/horarios.service';
+import { DiaSemana } from '../horarios/horario.entity';
+
+const DIAS_JS_ORDER: DiaSemana[] = [
+  DiaSemana.DOMINGO, DiaSemana.LUNES, DiaSemana.MARTES, DiaSemana.MIERCOLES,
+  DiaSemana.JUEVES, DiaSemana.VIERNES, DiaSemana.SABADO,
+];
 
 @Injectable()
 export class CitasService {
@@ -16,9 +23,25 @@ export class CitasService {
     private readonly citaRepo: Repository<Cita>,
     private readonly mailService: MailService,
     private readonly notificacionesService: NotificacionesService,
+    private readonly horariosService: HorariosService,
   ) {}
 
   async create(dto: CreateCitaDto): Promise<Cita | null> {
+    if (dto.fechaHora) {
+      const fecha = new Date(dto.fechaHora);
+
+      if (fecha.getTime() < Date.now()) {
+        throw new BadRequestException('No puedes agendar una cita en una fecha u hora que ya pasó');
+      }
+
+      const dia = DIAS_JS_ORDER[fecha.getDay()];
+      const hora = `${String(fecha.getHours()).padStart(2, '0')}:${String(fecha.getMinutes()).padStart(2, '0')}`;
+      const disponible = await this.horariosService.existeHorarioDisponible(dia, hora);
+      if (!disponible) {
+        throw new BadRequestException('No hay horario de atención disponible para esa fecha y hora');
+      }
+    }
+
     if (dto.odontologoId && dto.fechaHora) {
       const conflicto = await this.citaRepo.findOne({
         where: {
