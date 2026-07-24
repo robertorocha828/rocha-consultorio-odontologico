@@ -6,6 +6,7 @@ import {
   IsString,
 } from 'class-validator';
 import { EstadoPaciente, Genero } from '../paciente.entity';
+import { IsCelularEcuatoriano } from '../../common/validators/ecuador.validator';
 
 export class UpdatePacienteDto {
   @IsOptional()
@@ -22,6 +23,7 @@ export class UpdatePacienteDto {
 
   @IsOptional()
   @IsString()
+  @IsCelularEcuatoriano()
   telefono?: string;
 
   @IsOptional()

@@ -6,6 +6,7 @@ import {
   IsString,
 } from 'class-validator';
 import { EstadoOdontologo } from '../odontologo.entity';
+import { IsCelularEcuatoriano } from '../../common/validators/ecuador.validator';
 
 export class UpdateOdontologoDto {
   @IsOptional()
@@ -18,6 +19,7 @@ export class UpdateOdontologoDto {
 
   @IsOptional()
   @IsString()
+  @IsCelularEcuatoriano()
   telefono?: string;
 
   @IsOptional()
