@@ -8,10 +8,12 @@ import {
   IsString,
 } from 'class-validator';
 import { Genero } from '../paciente.entity';
+import { IsCedulaEcuatoriana, IsCelularEcuatoriano } from '../../common/validators/ecuador.validator';
 
 export class CreatePacienteDto {
   @IsNotEmpty()
   @IsString()
+  @IsCedulaEcuatoriana()
   cedula?: string;
 
   @IsNotEmpty()
@@ -32,6 +34,7 @@ export class CreatePacienteDto {
 
   @IsNotEmpty()
   @IsString()
+  @IsCelularEcuatoriano()
   telefono?: string;
 
   @IsOptional()

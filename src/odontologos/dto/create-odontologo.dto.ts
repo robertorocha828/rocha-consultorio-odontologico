@@ -5,10 +5,12 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
+import { IsCedulaEcuatoriana, IsCelularEcuatoriano } from '../../common/validators/ecuador.validator';
 
 export class CreateOdontologoDto {
   @IsNotEmpty()
   @IsString()
+  @IsCedulaEcuatoriana()
   cedula?: string;
 
   @IsNotEmpty()
@@ -21,6 +23,7 @@ export class CreateOdontologoDto {
 
   @IsNotEmpty()
   @IsString()
+  @IsCelularEcuatoriano()
   telefono?: string;
 
   @IsOptional()
@@ -35,7 +38,6 @@ export class CreateOdontologoDto {
   @IsInt()
   especialidadId?: number;
 
-  // Se genera automáticamente en el backend si no se envía.
   @IsOptional()
   @IsString()
   numeroRegistro?: string;
