@@ -7,4 +7,8 @@ export class GoogleAuthGuard extends AuthGuard('google') {
     const req = context.switchToHttp().getRequest();
     return { state: req.query.state };
   }
+
+  handleRequest(err: any, user: any) {
+    return user || null;
+  }
 }
