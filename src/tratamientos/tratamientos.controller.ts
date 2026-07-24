@@ -14,13 +14,11 @@ export class TratamientosController {
     return this.tratamientosService.create(dto);
   }
 
-  @Roles('admin')
   @Get()
   findAll() {
     return this.tratamientosService.findAll();
   }
 
-  @Roles('admin')
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.tratamientosService.findOne(id);

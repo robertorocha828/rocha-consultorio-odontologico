@@ -23,7 +23,6 @@ export class HorariosController {
     return new SuccessResponseDto('Horario creado exitosamente', horario);
   }
 
-  @Roles('admin')
   @Get()
   async findAll(
     @Query() query: QueryDto,
@@ -34,7 +33,6 @@ export class HorariosController {
     return new SuccessResponseDto('Horarios obtenidos exitosamente', result);
   }
 
-  @Roles('admin')
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const horario = await this.horariosService.findOne(id);
