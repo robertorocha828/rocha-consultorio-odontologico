@@ -9,6 +9,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { QueryDto } from 'src/common/dto/query.dto';
 import { MailService } from '../mail/mail.service';
 import { NotificacionesService } from '../notificaciones/notificaciones.service';
+import { emailTemplate } from '../mail/email-template';
 
 @Injectable()
 export class UsersService {
@@ -20,48 +21,54 @@ export class UsersService {
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User | null> {
-  try {
-    const plainPassword = createUserDto.password  // ← guardar antes del hash
-    const hashedPassword = await bcrypt.hash(plainPassword, 10)
-    const user = this.userRepository.create({
-      ...createUserDto,
-      password: hashedPassword,
-    })
-    const saved = await this.userRepository.save(user)
-    saved['plainPassword'] = plainPassword  // ← adjuntar temporalmente para el email
-
     try {
-      await this.mailService.sendMail({
-        to: saved.email as string,
-        subject: 'Bienvenido al Consultorio Odontológico',
-        message: `
-          <h2>Hola ${saved.username}</h2>
-          <p>Se creó una cuenta para ti en el Consultorio Odontológico.</p>
-          <p>Tus credenciales de acceso son:</p>
-          <ul>
-            <li><b>Usuario (email):</b> ${saved.email}</li>
-            <li><b>Contraseña:</b> ${plainPassword}</li>
-          </ul>
-          <p>Por seguridad te recomendamos cambiar tu contraseña después de ingresar.</p>
-        `,
+      const plainPassword = createUserDto.password
+      const hashedPassword = await bcrypt.hash(plainPassword, 10)
+      const user = this.userRepository.create({
+        ...createUserDto,
+        password: hashedPassword,
       })
-      await this.notificacionesService.create({
-        destinatario: saved.email as string,
-        asunto: 'Bienvenido al Consultorio Odontológico',
-        mensaje: `Cuenta creada para ${saved.username} (rol: ${saved.rol})`,
-        estado: 'enviado',
-        tipo: 'bienvenida',
-      })
-    } catch (mailErr) {
-      console.error('Error enviando correo de bienvenida:', mailErr)
-    }
+      const saved = await this.userRepository.save(user)
 
-    return saved
-  } catch (err) {
-    console.error('Error creando usuario:', err)
-    return null
+      try {
+        await this.mailService.sendMail({
+          to: saved.email as string,
+          subject: 'Bienvenido a DentalCare',
+          message: emailTemplate({
+            titulo: `¡Bienvenido, ${saved.username}!`,
+            contenidoHtml: `
+              <p>Se creó una cuenta para ti en <b>DentalCare</b>. Estas son tus credenciales de acceso:</p>
+              <table role="presentation" cellpadding="0" cellspacing="0" style="margin:16px 0;font-size:14px;width:100%;">
+                <tr>
+                  <td style="padding:6px 12px 6px 0;color:#7a8a96;">Usuario (email):</td>
+                  <td style="font-weight:600;color:#0a2540;">${saved.email}</td>
+                </tr>
+                <tr>
+                  <td style="padding:6px 12px 6px 0;color:#7a8a96;">Contraseña:</td>
+                  <td style="font-weight:600;color:#0a2540;">${plainPassword}</td>
+                </tr>
+              </table>
+              <p>Por seguridad te recomendamos cambiar tu contraseña después de ingresar.</p>
+            `,
+          }),
+        })
+        await this.notificacionesService.create({
+          destinatario: saved.email as string,
+          asunto: 'Bienvenido a DentalCare',
+          mensaje: `Cuenta creada para ${saved.username} (rol: ${saved.rol})`,
+          estado: 'enviado',
+          tipo: 'bienvenida',
+        })
+      } catch (mailErr) {
+        console.error('Error enviando correo de bienvenida:', mailErr)
+      }
+
+      return saved
+    } catch (err) {
+      console.error('Error creando usuario:', err)
+      return null
+    }
   }
-}
 
   async findAll(queryDto: QueryDto): Promise<Pagination<User> | null> {
     try {
@@ -117,7 +124,6 @@ export class UsersService {
     }
   }
 
-  // Cuentas creadas vía Google: sin contraseña, siempre rol "paciente".
   async createFromGoogle(data: {
     username: string;
     email: string;

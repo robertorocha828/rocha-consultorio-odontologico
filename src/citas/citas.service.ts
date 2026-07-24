@@ -10,11 +10,27 @@ import { MailService } from '../mail/mail.service';
 import { NotificacionesService } from '../notificaciones/notificaciones.service';
 import { HorariosService } from '../horarios/horarios.service';
 import { DiaSemana } from '../horarios/horario.entity';
+import { emailTemplate } from '../mail/email-template';
 
 const DIAS_JS_ORDER: DiaSemana[] = [
   DiaSemana.DOMINGO, DiaSemana.LUNES, DiaSemana.MARTES, DiaSemana.MIERCOLES,
   DiaSemana.JUEVES, DiaSemana.VIERNES, DiaSemana.SABADO,
 ];
+
+function formatearFecha(fechaHora: string | Date): string {
+  const fecha = new Date(fechaHora);
+  const texto = fecha.toLocaleString('es-EC', {
+    weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
+    hour: '2-digit', minute: '2-digit',
+  });
+  return texto.charAt(0).toUpperCase() + texto.slice(1);
+}
+
+function esMismoDiaOAnterior(fecha: Date, referencia: Date): boolean {
+  const f = new Date(fecha.getFullYear(), fecha.getMonth(), fecha.getDate());
+  const r = new Date(referencia.getFullYear(), referencia.getMonth(), referencia.getDate());
+  return f.getTime() <= r.getTime();
+}
 
 @Injectable()
 export class CitasService {
@@ -63,14 +79,28 @@ export class CitasService {
         try {
           await this.mailService.sendMail({
             to: dto.emailPaciente,
-            subject: 'Confirmación de Cita',
-            message: `<h2>Cita Agendada</h2>
-                      <p>Tu cita para <b>${dto.motivo}</b> fue agendada
-                      para el <b>${dto.fechaHora}</b>.</p>`,
+            subject: 'Confirmación de tu cita — DentalCare',
+            message: emailTemplate({
+              titulo: 'Tu cita fue agendada',
+              contenidoHtml: `
+                <p>Confirmamos tu cita en <b>DentalCare</b>:</p>
+                <table role="presentation" cellpadding="0" cellspacing="0" style="margin:16px 0;font-size:14px;width:100%;">
+                  <tr>
+                    <td style="padding:6px 12px 6px 0;color:#7a8a96;">Motivo:</td>
+                    <td style="font-weight:600;color:#0a2540;">${dto.motivo}</td>
+                  </tr>
+                  <tr>
+                    <td style="padding:6px 12px 6px 0;color:#7a8a96;">Fecha:</td>
+                    <td style="font-weight:600;color:#0a2540;">${formatearFecha(dto.fechaHora as unknown as string)}</td>
+                  </tr>
+                </table>
+                <p>Si necesitas reprogramar o cancelar, contáctanos con anticipación.</p>
+              `,
+            }),
           });
           await this.notificacionesService.create({
             destinatario: dto.emailPaciente,
-            asunto: 'Confirmación de Cita',
+            asunto: 'Confirmación de cita — DentalCare',
             mensaje: `Cita agendada para ${dto.motivo}`,
             estado: 'enviado',
             tipo: 'cita',
@@ -87,7 +117,6 @@ export class CitasService {
     }
   }
 
-  // ── el resto de métodos queda exactamente igual ──
   async findAll(queryDto: QueryDto): Promise<Pagination<Cita> | null> {
     try {
       const { page, limit, search, searchField, sort, order } = queryDto;
@@ -162,9 +191,20 @@ export class CitasService {
     try {
       const cita = await this.findOne(id);
       if (!cita) return null;
+
+      if (dto.estado === EstadoCita.COMPLETADA && cita.fechaHora) {
+        const fechaCita = new Date(cita.fechaHora);
+        if (!esMismoDiaOAnterior(fechaCita, new Date())) {
+          throw new BadRequestException(
+            'No puedes atender esta cita todavía: su fecha programada es posterior a hoy',
+          );
+        }
+      }
+
       Object.assign(cita, dto);
       return await this.citaRepo.save(cita);
     } catch (err) {
+      if (err instanceof BadRequestException) throw err;
       console.error('Error actualizando cita:', err);
       return null;
     }
