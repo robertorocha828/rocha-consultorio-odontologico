@@ -28,8 +28,6 @@ export class AuthController {
     return this.authService.registerPaciente(createUserDto)
   }
 
-  // Inicia el flujo de Google. Si viene ?state=<userId>, es una vinculación
-  // desde /perfil de un usuario ya logueado; si no, es un login/registro nuevo.
   @Public()
   @Get('google')
   @UseGuards(GoogleAuthGuard)
@@ -39,12 +37,17 @@ export class AuthController {
   @Get('google/callback')
   @UseGuards(GoogleAuthGuard)
   async googleCallback(@Req() req: Request, @Res() res: Response) {
-    const { access_token } = await this.authService.googleLogin(req.user as any);
     const frontendUrl = process.env.FRONTEND_URL ?? 'http://localhost:5173';
+    const googleUser = req.user as any;
+
+    if (!googleUser) {
+      return res.redirect(`${frontendUrl}/auth/google/callback?error=access_denied`);
+    }
+
+    const { access_token } = await this.authService.googleLogin(googleUser);
     res.redirect(`${frontendUrl}/auth/google/callback?token=${access_token}`);
   }
 
-  // Sin @Public(): requiere estar logueado (lo cubre el JwtAuthGuard global).
   @Delete('google')
   unlinkGoogle(@Req() req: Request) {
     return this.authService.unlinkGoogleAccount((req.user as any).id);
