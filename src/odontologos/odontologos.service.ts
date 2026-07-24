@@ -6,17 +6,34 @@ import { Odontologo } from './odontologo.entity';
 import { CreateOdontologoDto } from './dto/create-odontologo.dto';
 import { UpdateOdontologoDto } from './dto/update-odontologo.dto';
 import { QueryDto } from 'src/common/dto/query.dto';
+import { UsersService } from '../users/users.service';
+import { User } from '../users/user.entity';
 
 @Injectable()
 export class OdontologosService {
   constructor(
     @InjectRepository(Odontologo)
     private readonly odontologoRepo: Repository<Odontologo>,
+    private readonly usersService: UsersService,
   ) {}
+
+  private async generarNumeroRegistro(): Promise<string> {
+    const total = await this.odontologoRepo.count();
+    const year = new Date().getFullYear();
+    return `REG-${year}-${String(total + 1).padStart(4, '0')}`;
+  }
+
+  async findUsuariosDisponibles(): Promise<User[]> {
+    const doctores = await this.usersService.findByRol('doctor');
+    const odontologos = await this.odontologoRepo.find({ where: {} });
+    const vinculados = new Set(odontologos.map((o) => o.userId).filter(Boolean));
+    return doctores.filter((u) => !vinculados.has(u.id));
+  }
 
   async create(dto: CreateOdontologoDto): Promise<Odontologo | null> {
     try {
-      const odontologo = this.odontologoRepo.create(dto);
+      const numeroRegistro = dto.numeroRegistro || (await this.generarNumeroRegistro());
+      const odontologo = this.odontologoRepo.create({ ...dto, numeroRegistro });
       return await this.odontologoRepo.save(odontologo);
     } catch (err) {
       console.error('Error creando odontólogo:', err);

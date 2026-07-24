@@ -83,6 +83,15 @@ export class UsersService {
     }
   }
 
+  async findByRol(rol: string): Promise<User[]> {
+    try {
+      return await this.userRepository.find({ where: { rol } });
+    } catch (err) {
+      console.error('Error listando usuarios por rol:', err);
+      return [];
+    }
+  }
+
   async findOne(id: string): Promise<User | null> {
     try {
       return await this.userRepository.findOne({ where: { id } });

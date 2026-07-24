@@ -38,11 +38,7 @@ export class CreateOdontologoDto {
   @IsInt()
   especialidadId?: number;
 
-<<<<<<< Updated upstream
-  @IsNotEmpty()
-=======
   @IsOptional()
->>>>>>> Stashed changes
   @IsString()
   numeroRegistro?: string;
 }

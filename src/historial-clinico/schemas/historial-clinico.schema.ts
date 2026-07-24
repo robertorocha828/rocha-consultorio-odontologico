@@ -24,6 +24,9 @@ export class HistorialClinico extends Document {
   @Prop({ default: '' })
   procedimientosRealizados?: string;
 
+  @Prop({ type: [String], default: [] })
+  tratamientosIds?: string[];
+
   @Prop({ default: '' })
   proximaVisita?: string;
 

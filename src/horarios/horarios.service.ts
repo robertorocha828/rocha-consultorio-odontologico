@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { paginate, Pagination } from 'nestjs-typeorm-paginate';
-import { Horario } from './horario.entity';
+import { Horario, DiaSemana } from './horario.entity';
 import { CreateHorarioDto } from './dto/create-horario.dto';
 import { UpdateHorarioDto } from './dto/update-horario.dto';
 import { QueryDto } from 'src/common/dto/query.dto';
@@ -46,6 +46,23 @@ export class HorariosService {
     } catch (err) {
       console.error('Error buscando horario:', err);
       return null;
+    }
+  }
+
+  // Usado por CitasService para validar que una fecha/hora de cita caiga
+  // dentro de algún rango de atención configurado para ese día.
+  async existeHorarioDisponible(dia: DiaSemana, hora: string): Promise<boolean> {
+    try {
+      const horarios = await this.horarioRepo.find({ where: { dia } });
+      const horaComparar = hora.slice(0, 5);
+      return horarios.some((h) => {
+        const inicio = (h.horaInicio ?? '').slice(0, 5);
+        const fin = (h.horaFin ?? '').slice(0, 5);
+        return inicio <= horaComparar && horaComparar < fin;
+      });
+    } catch (err) {
+      console.error('Error validando disponibilidad de horario:', err);
+      return false;
     }
   }
 
