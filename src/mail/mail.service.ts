@@ -1,20 +1,23 @@
 import * as nodemailer from 'nodemailer';
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { SendMailDto } from './dto/send-mail.dto';
 
 @Injectable()
 export class MailService {
-  async sendMail(dto: SendMailDto) {
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.MAIL_USER,
-        pass: process.env.MAIL_PASS,
-      },
-    });
+  private transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.MAIL_USER,
+      pass: process.env.MAIL_PASS,
+    },
+    connectionTimeout: 8_000,
+    greetingTimeout: 8_000,
+    socketTimeout: 8_000,
+  });
 
+  async sendMail(dto: SendMailDto) {
     try {
-      const info = await transporter.sendMail({
+      const info = await this.transporter.sendMail({
         from: process.env.MAIL_USER,
         to: dto.to,
         subject: dto.subject,
@@ -22,7 +25,8 @@ export class MailService {
       });
       return { messageId: info.messageId };
     } catch (error) {
-      throw new InternalServerErrorException('No se pudo enviar el correo');
+      console.error('Error enviando correo (SMTP no disponible o credenciales inválidas):', error);
+      return null;
     }
   }
 }

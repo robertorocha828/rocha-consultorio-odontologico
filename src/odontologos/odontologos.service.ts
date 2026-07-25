@@ -8,6 +8,7 @@ import { UpdateOdontologoDto } from './dto/update-odontologo.dto';
 import { QueryDto } from 'src/common/dto/query.dto';
 import { UsersService } from '../users/users.service';
 import { User } from '../users/user.entity';
+import { NotificacionesService } from '../notificaciones/notificaciones.service';
 
 @Injectable()
 export class OdontologosService {
@@ -15,6 +16,7 @@ export class OdontologosService {
     @InjectRepository(Odontologo)
     private readonly odontologoRepo: Repository<Odontologo>,
     private readonly usersService: UsersService,
+    private readonly notificacionesService: NotificacionesService,
   ) {}
 
   private async generarNumeroRegistro(): Promise<string> {
@@ -34,7 +36,17 @@ export class OdontologosService {
     try {
       const numeroRegistro = dto.numeroRegistro || (await this.generarNumeroRegistro());
       const odontologo = this.odontologoRepo.create({ ...dto, numeroRegistro });
-      return await this.odontologoRepo.save(odontologo);
+      const saved = await this.odontologoRepo.save(odontologo);
+
+      this.notificacionesService.create({
+        destinatario: saved.email ?? 'admin',
+        asunto: 'Nuevo odontólogo registrado',
+        mensaje: `Se registró al odontólogo ${saved.nombre} ${saved.apellido} (Reg. ${saved.numeroRegistro}).`,
+        estado: 'enviado',
+        tipo: 'odontologo',
+      }).catch((notifErr) => console.error('Error registrando notificación de odontólogo:', notifErr));
+
+      return saved;
     } catch (err) {
       console.error('Error creando odontólogo:', err);
       return null;

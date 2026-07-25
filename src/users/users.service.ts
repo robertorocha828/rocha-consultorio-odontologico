@@ -30,38 +30,35 @@ export class UsersService {
       })
       const saved = await this.userRepository.save(user)
 
-      try {
-        await this.mailService.sendMail({
-          to: saved.email as string,
-          subject: 'Bienvenido a DentalCare',
-          message: emailTemplate({
-            titulo: `¡Bienvenido, ${saved.username}!`,
-            contenidoHtml: `
-              <p>Se creó una cuenta para ti en <b>DentalCare</b>. Estas son tus credenciales de acceso:</p>
-              <table role="presentation" cellpadding="0" cellspacing="0" style="margin:16px 0;font-size:14px;width:100%;">
-                <tr>
-                  <td style="padding:6px 12px 6px 0;color:#7a8a96;">Usuario (email):</td>
-                  <td style="font-weight:600;color:#0a2540;">${saved.email}</td>
-                </tr>
-                <tr>
-                  <td style="padding:6px 12px 6px 0;color:#7a8a96;">Contraseña:</td>
-                  <td style="font-weight:600;color:#0a2540;">${plainPassword}</td>
-                </tr>
-              </table>
-              <p>Por seguridad te recomendamos cambiar tu contraseña después de ingresar.</p>
-            `,
-          }),
-        })
-        await this.notificacionesService.create({
-          destinatario: saved.email as string,
-          asunto: 'Bienvenido a DentalCare',
-          mensaje: `Cuenta creada para ${saved.username} (rol: ${saved.rol})`,
-          estado: 'enviado',
-          tipo: 'bienvenida',
-        })
-      } catch (mailErr) {
-        console.error('Error enviando correo de bienvenida:', mailErr)
-      }
+      this.mailService.sendMail({
+        to: saved.email as string,
+        subject: 'Bienvenido a DentalCare',
+        message: emailTemplate({
+          titulo: `¡Bienvenido, ${saved.username}!`,
+          contenidoHtml: `
+            <p>Se creó una cuenta para ti en <b>DentalCare</b>. Estas son tus credenciales de acceso:</p>
+            <table role="presentation" cellpadding="0" cellspacing="0" style="margin:16px 0;font-size:14px;width:100%;">
+              <tr>
+                <td style="padding:6px 12px 6px 0;color:#7a8a96;">Usuario (email):</td>
+                <td style="font-weight:600;color:#0a2540;">${saved.email}</td>
+              </tr>
+              <tr>
+                <td style="padding:6px 12px 6px 0;color:#7a8a96;">Contraseña:</td>
+                <td style="font-weight:600;color:#0a2540;">${plainPassword}</td>
+              </tr>
+            </table>
+            <p>Por seguridad te recomendamos cambiar tu contraseña después de ingresar.</p>
+          `,
+        }),
+      }).catch((mailErr) => console.error('Error enviando correo de bienvenida:', mailErr))
+
+      this.notificacionesService.create({
+        destinatario: saved.email as string,
+        asunto: 'Bienvenido a DentalCare',
+        mensaje: `Cuenta creada para ${saved.username} (rol: ${saved.rol})`,
+        estado: 'enviado',
+        tipo: 'bienvenida',
+      }).catch((notifErr) => console.error('Error registrando notificación de bienvenida:', notifErr))
 
       return saved
     } catch (err) {
@@ -174,11 +171,26 @@ export class UsersService {
     try {
       const user = await this.findOne(id);
       if (!user) return null;
+
+      const rolAnterior = user.rol;
+
       if (updateUserDto.password) {
         updateUserDto.password = await bcrypt.hash(updateUserDto.password, 10);
       }
       Object.assign(user, updateUserDto);
-      return await this.userRepository.save(user);
+      const saved = await this.userRepository.save(user);
+
+      if (updateUserDto.rol && updateUserDto.rol !== rolAnterior) {
+        this.notificacionesService.create({
+          destinatario: saved.email as string,
+          asunto: 'Cambio de rol',
+          mensaje: `El usuario ${saved.username} cambió de rol: ${rolAnterior} → ${saved.rol}`,
+          estado: 'enviado',
+          tipo: 'cambio-rol',
+        }).catch((notifErr) => console.error('Error registrando notificación de cambio de rol:', notifErr))
+      }
+
+      return saved;
     } catch (err) {
       console.error('Error actualizando usuario:', err);
       return null;

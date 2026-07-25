@@ -76,38 +76,35 @@ export class CitasService {
       const saved = await this.citaRepo.save(cita);
 
       if (dto.emailPaciente) {
-        try {
-          await this.mailService.sendMail({
-            to: dto.emailPaciente,
-            subject: 'Confirmación de tu cita — DentalCare',
-            message: emailTemplate({
-              titulo: 'Tu cita fue agendada',
-              contenidoHtml: `
-                <p>Confirmamos tu cita en <b>DentalCare</b>:</p>
-                <table role="presentation" cellpadding="0" cellspacing="0" style="margin:16px 0;font-size:14px;width:100%;">
-                  <tr>
-                    <td style="padding:6px 12px 6px 0;color:#7a8a96;">Motivo:</td>
-                    <td style="font-weight:600;color:#0a2540;">${dto.motivo}</td>
-                  </tr>
-                  <tr>
-                    <td style="padding:6px 12px 6px 0;color:#7a8a96;">Fecha:</td>
-                    <td style="font-weight:600;color:#0a2540;">${formatearFecha(dto.fechaHora as unknown as string)}</td>
-                  </tr>
-                </table>
-                <p>Si necesitas reprogramar o cancelar, contáctanos con anticipación.</p>
-              `,
-            }),
-          });
-          await this.notificacionesService.create({
-            destinatario: dto.emailPaciente,
-            asunto: 'Confirmación de cita — DentalCare',
-            mensaje: `Cita agendada para ${dto.motivo}`,
-            estado: 'enviado',
-            tipo: 'cita',
-          });
-        } catch (err) {
-          console.error('Error enviando email de cita:', err);
-        }
+        this.mailService.sendMail({
+          to: dto.emailPaciente,
+          subject: 'Confirmación de tu cita — DentalCare',
+          message: emailTemplate({
+            titulo: 'Tu cita fue agendada',
+            contenidoHtml: `
+              <p>Confirmamos tu cita en <b>DentalCare</b>:</p>
+              <table role="presentation" cellpadding="0" cellspacing="0" style="margin:16px 0;font-size:14px;width:100%;">
+                <tr>
+                  <td style="padding:6px 12px 6px 0;color:#7a8a96;">Motivo:</td>
+                  <td style="font-weight:600;color:#0a2540;">${dto.motivo}</td>
+                </tr>
+                <tr>
+                  <td style="padding:6px 12px 6px 0;color:#7a8a96;">Fecha:</td>
+                  <td style="font-weight:600;color:#0a2540;">${formatearFecha(dto.fechaHora as unknown as string)}</td>
+                </tr>
+              </table>
+              <p>Si necesitas reprogramar o cancelar, contáctanos con anticipación.</p>
+            `,
+          }),
+        }).catch((err) => console.error('Error enviando email de cita:', err));
+
+        this.notificacionesService.create({
+          destinatario: dto.emailPaciente,
+          asunto: 'Confirmación de cita — DentalCare',
+          mensaje: `Cita agendada para ${dto.motivo}`,
+          estado: 'enviado',
+          tipo: 'cita',
+        }).catch((err) => console.error('Error registrando notificación de cita:', err));
       }
 
       return saved;
